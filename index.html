@@ -57,36 +57,25 @@ header.cabecera{
 }
 .cabecera-inner{
   display:flex;align-items:center;justify-content:space-between;
-  padding:.9rem 0;gap:1rem;
+  padding:.9rem 0;gap:1rem;flex-wrap:wrap;
 }
 .marca{display:flex;align-items:center;gap:1rem;}
 .marca img{height:52px;width:auto;}
-.marca-texto{line-height:1.25;}
-.marca-texto strong{
-  display:block;color:var(--azul);
-  font-size:1.15rem;font-weight:700;letter-spacing:.02em;
-}
-.marca-texto span{
-  display:block;color:var(--gris-claro);
-  font-size:.72rem;letter-spacing:.06em;text-transform:uppercase;
-}
 .burger{
   display:none;background:none;border:1.5px solid var(--azul);
   border-radius:var(--radio);padding:.45rem .6rem;cursor:pointer;
 }
 .burger svg{width:22px;height:22px;stroke:var(--azul);}
-/* ---------- Navegación (barra azul actual) ---------- */
-nav.navegacion{background:var(--azul);}
-nav.navegacion ul{
-  list-style:none;display:flex;justify-content:center;gap:.4rem;
+/* ---------- Navegación (en la barra blanca, junto al logo) ---------- */
+.nav-principal ul{list-style:none;display:flex;gap:.3rem;}
+.nav-principal a{
+  display:block;color:var(--azul);font-size:.83rem;font-weight:700;
+  letter-spacing:.09em;text-transform:uppercase;
+  padding:.65rem 1.15rem;border-radius:var(--radio);
+  transition:background .2s,color .2s;
 }
-nav.navegacion a{
-  display:block;color:#fff;font-size:.86rem;font-weight:600;
-  letter-spacing:.08em;text-transform:uppercase;
-  padding:.95rem 1.5rem;transition:background .2s;
-}
-nav.navegacion a:hover,
-nav.navegacion a.activo{background:var(--azul-oscuro);}
+.nav-principal a:hover,
+.nav-principal a.activo{background:var(--azul);color:#fff;}
 
 /* ---------- Botones ---------- */
 .btn{
@@ -146,19 +135,6 @@ nav.navegacion a.activo{background:var(--azul-oscuro);}
 }
 .flecha-scroll svg{width:26px;height:26px;}
 @keyframes rebote{0%,100%{transform:translate(-50%,0);}50%{transform:translate(-50%,9px);}}
-
-/* ---------- Franja de datos ---------- */
-.franja-datos{background:var(--azul);color:#fff;}
-.franja-datos .container{
-  display:grid;grid-template-columns:repeat(4,1fr);gap:1rem;
-  padding:1.7rem 0;text-align:center;
-}
-.dato b{
-  display:block;font-size:1.9rem;font-weight:700;color:#fff;line-height:1.1;
-}
-.dato span{
-  font-size:.74rem;letter-spacing:.14em;text-transform:uppercase;color:#c9c8ee;
-}
 
 /* ---------- Secciones genéricas ---------- */
 section.bloque{padding:5.2rem 0;}
@@ -381,12 +357,11 @@ footer.pie{background:var(--azul);color:#fff;}
 }
 @media (max-width:700px){
   .burger{display:block;}
-  nav.navegacion{display:none;position:sticky;top:64px;z-index:999;}
-  nav.navegacion.abierto{display:block;}
-  nav.navegacion ul{flex-direction:column;}
-  nav.navegacion a{text-align:center;}
+  .nav-principal{display:none;width:100%;}
+  .nav-principal.abierto{display:block;}
+  .nav-principal ul{flex-direction:column;gap:.25rem;}
+  .nav-principal a{padding:.8rem 1rem;text-align:center;}
   .topbar .container{justify-content:center;}
-  .marca-texto strong{font-size:.98rem;}
   .marca img{height:42px;}
   .discos{grid-template-columns:1fr 1fr;gap:.9rem;}
   .campos-dobles{grid-template-columns:1fr;}
@@ -415,31 +390,25 @@ footer.pie{background:var(--azul);color:#fff;}
   </div>
 </div>
 
-<!-- ============ CABECERA (mantener actual) ============ -->
+<!-- ============ CABECERA (logo + navegación, fondo blanco) ============ -->
 <header class="cabecera">
   <div class="container cabecera-inner">
     <a class="marca" href="#inicio">
       <img src="assets/img/logo-grupo-bolbaite.png" alt="Logo Grupo Bolbaite">
-      <span class="marca-texto">
-        <strong>GRUPO BOLBAITE</strong>
-        <span>Industrial Bolbaite, S.L. — Sunbol, S.L.</span>
-      </span>
     </a>
+    <nav class="nav-principal" id="navPrincipal">
+      <ul>
+        <li><a href="#inicio" class="activo">Inicio</a></li>
+        <li><a href="https://www.industrialbolbaite.es/catalogo">Catálogo</a></li>
+        <li><a href="#fabricacion-propia">Grupo Bolbaite</a></li>
+        <li><a href="#contacto">Contacto</a></li>
+      </ul>
+    </nav>
     <button class="burger" id="btnMenu" aria-label="Abrir menú">
       <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round"><path d="M3 6h18M3 12h18M3 18h18"/></svg>
     </button>
   </div>
 </header>
-
-<!-- ============ NAVEGACIÓN (barra azul actual) ============ -->
-<nav class="navegacion" id="navPrincipal">
-  <ul class="container">
-    <li><a href="#inicio" class="activo">Inicio</a></li>
-    <li><a href="https://www.industrialbolbaite.es/catalogo">Catálogo</a></li>
-    <li><a href="#fabricacion-propia">Grupo Bolbaite</a></li>
-    <li><a href="#contacto">Contacto</a></li>
-  </ul>
-</nav>
 
 <!-- ============ HERO CON VÍDEO (estilo Polidisc) ============ -->
 <section class="hero">
@@ -452,7 +421,7 @@ footer.pie{background:var(--azul);color:#fff;}
     <div class="separador"></div>
     <p>Abrasivos desde 1970</p>
     <a class="btn btn-blanco" href="https://www.industrialbolbaite.es/catalogo">
-      Catálogo
+      Conoce nuestros productos
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
     </a>
   </div>
@@ -460,16 +429,6 @@ footer.pie{background:var(--azul);color:#fff;}
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14M5 12l7 7 7-7"/></svg>
   </a>
 </section>
-
-<!-- ============ FRANJA DE DATOS ============ -->
-<div class="franja-datos revelar">
-  <div class="container">
-    <div class="dato"><b>1970</b><span>Origen de la empresa</span></div>
-    <div class="dato"><b>+50</b><span>Años de experiencia</span></div>
-    <div class="dato"><b>4</b><span>Marcas oficiales</span></div>
-    <div class="dato"><b>INT.</b><span>Portugal · Túnez · Marruecos</span></div>
-  </div>
-</div>
 
 <!-- ============ FABRICACIÓN PROPIA (desde 1970) ============ -->
 <section class="bloque" id="fabricacion-propia">
