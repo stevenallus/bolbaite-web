@@ -158,3 +158,22 @@ test('alertasBajoConsumo ignora consumos de poco importe (< 100 €/mes por defe
   assert.equal(C.alertasBajoConsumo(d, { base: 6 }).length, 0);
   assert.equal(C.alertasBajoConsumo(d, { base: 6, importeMinimoMes: 0 }).length, 1);
 });
+
+test('alertasProximoPedido: límites de la semana y del retraso', () => {
+  // HOY es viernes 9/10/2026: semana del lunes 5 (hoy − 4) al domingo 11 (hoy + 2)
+  const casos = [
+    [4, 'esta-semana'],  // prevista el lunes
+    [5, 'retrasado'],    // prevista el domingo anterior
+    [-16, 'proximas'],   // prevista domingo + 14
+    [-17, undefined],    // prevista domingo + 15: fuera
+    [30, 'retrasado'],   // retraso igual al intervalo
+    [31, undefined],     // retraso de un intervalo + 1: lo recoge la alerta de bajo consumo
+  ];
+  for (const [previstaHaceDias, esperado] of casos) {
+    const d = datosBase();
+    const ultimo = previstaHaceDias + 30;
+    periodicos(d, 'c1', 'p1', 30, ultimo + 60, ultimo, 20);
+    const r = C.alertasProximoPedido(d, {});
+    assert.equal(r[0] && r[0].estado, esperado, `prevista hace ${previstaHaceDias} días`);
+  }
+});

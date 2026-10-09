@@ -75,7 +75,7 @@
     const cartera = datos.clientes.filter(c => (!estado.comercialId || c.comercialId === estado.comercialId) && (!estado.provincia || c.provincia === estado.provincia)).length;
     $('kpisVentas').innerHTML = `
       <div class="kpi kpi-marca"><div class="kpi-nombre">Ventas ${estado.meses} meses</div><div class="kpi-valor">${eur(k.ventas)}</div>
-        <div class="kpi-detalle">${k.variacion === null ? 'Sin año anterior completo para comparar' : `${U.delta(k.variacion)} frente al año anterior`}</div></div>
+        <div class="kpi-detalle">${k.ventasAnterior === null ? 'Sin año anterior completo para comparar' : k.variacion === null ? 'Sin ventas en el mismo periodo del año anterior' : `${U.delta(k.variacion)} frente al año anterior`}</div></div>
       <div class="kpi"><div class="kpi-nombre">Clientes activos</div><div class="kpi-valor">${num(k.clientesActivos)}</div><div class="kpi-detalle">de ${num(cartera)} en cartera</div></div>
       <div class="kpi"><div class="kpi-nombre">Ticket medio</div><div class="kpi-valor">${eur(k.ticketMedio)}</div><div class="kpi-detalle">${num(k.pedidos)} pedidos en el periodo</div></div>
       <div class="kpi"><div class="kpi-nombre">Clientes nuevos</div><div class="kpi-valor">${num(k.clientesNuevos)}</div><div class="kpi-detalle">Dados de alta en el periodo</div></div>`;
@@ -231,7 +231,9 @@
 
   function comparar(a, b, campo) {
     const va = a[campo], vb = b[campo];
-    if (va === null || va === undefined) return 1;
+    const nulo = v => v === null || v === undefined;
+    if (nulo(va) && nulo(vb)) return 0;
+    if (nulo(va)) return 1;
     if (vb === null || vb === undefined) return -1;
     if (typeof va === 'string') return va.localeCompare(vb, 'es');
     return va - vb;
@@ -345,7 +347,7 @@
         ${cv.sinVisita.length > 8 ? `<details class="mas"><summary>Ver los ${cv.sinVisita.length - 8} restantes</summary>${listaAlertas(cv.sinVisita.slice(8).map(itemSinVisita))}</details>` : ''}
       </div>
       <div class="subinforme"><h3>Últimas visitas</h3>
-        ${cv.ultimasVisitas.length ? listaAlertas(cv.ultimasVisitas.slice(0, 10).map(v => ({ chip: `<span class="chip">${fecha(v.fecha)}</span>`, texto: `<b>${esc(v.cliente)}</b>`, detalle: esc(v.nota), meta: chipComercial(v.comercialId) }))) : sinAlertas('Sin visitas registradas.')}
+        ${cv.ultimasVisitas.length ? listaAlertas(cv.ultimasVisitas.map(v => ({ chip: `<span class="chip">${fecha(v.fecha)}</span>`, texto: `<b>${esc(v.cliente)}</b>`, detalle: esc(v.nota), meta: chipComercial(v.comercialId) }))) : sinAlertas('Sin visitas registradas.')}
       </div>`;
 
     // 4 · Muestras
@@ -385,8 +387,8 @@
 
     // Resumen de la semana
     const resumen = [
-      ['inf-consumo', 'Bajo consumo', bajo.length, criticos ? chip('alerta', 'critico', `${criticos} críticos`) : bajo.length ? chip('alerta', 'aviso', 'Revisar') : chip('alerta', 'ok')],
-      ['inf-pedidos', 'Pedidos a reclamar', retrasados.length + semana.length, chip('pedido', 'retrasado', `${retrasados.length} retrasados`)],
+      ['inf-consumo', 'Bajo consumo', bajo.length, criticos ? chip('alerta', 'critico', `${criticos} crítico${criticos === 1 ? '' : 's'}`) : bajo.length ? chip('alerta', 'aviso', 'Revisar') : chip('alerta', 'ok')],
+      ['inf-pedidos', 'Pedidos a reclamar', retrasados.length + semana.length, retrasados.length ? chip('pedido', 'retrasado', `${retrasados.length} retrasado${retrasados.length === 1 ? '' : 's'}`) : chip('pedido', 'esta-semana', `${semana.length} esta semana`)],
       ['inf-clientes', 'Altas nuevas', cv.nuevos.length, chip('alerta', 'aviso', `${cv.sinVisita.length} sin visitar`)],
       ['inf-muestras', 'Muestras sin feedback', mu.pendientesAlerta, chip('muestra', 'pedido', `${mu.conversion === null ? '—' : U.pct(mu.conversion)} conversión`)],
       ['inf-crecimiento', 'Clientes al alza', cr.length, chip('muestra', 'positivo', 'Oportunidad')],
@@ -441,6 +443,8 @@
     const campo = th.dataset.orden;
     estado.orden = { campo, dir: estado.orden.campo === campo ? -estado.orden.dir : (['cliente', 'provincia', 'comercialId'].includes(campo) ? 1 : -1) };
     renderClientes();
+    const cabecera = document.querySelector(`#tablaClientes th[data-orden="${campo}"]`);
+    if (cabecera) cabecera.focus();
   };
   $('tablaClientes').addEventListener('click', ev => { const th = ev.target.closest('[data-orden]'); if (th) ordenar(th); });
   $('tablaClientes').addEventListener('keydown', ev => {

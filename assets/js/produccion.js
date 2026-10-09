@@ -32,6 +32,12 @@
     return num(n, unidad !== 'uds' && Math.abs(n) < 100 ? 1 : 0) + ' ' + unidad;
   }
 
+  // Solo cantidades enteras y positivas cuentan para la orden.
+  function cantidadOk(valor) {
+    const n = Number(valor);
+    return Number.isInteger(n) && n > 0;
+  }
+
   function enFabricacion(id) {
     return C.unidadesEnFabricacion(datos, id);
   }
@@ -98,7 +104,7 @@
         const c = coberturaProducto(p.id, estado.baseOrden);
         const s3 = C.cantidadSugerida(datos, p.id, 3, estado.baseOrden);
         const s6 = C.cantidadSugerida(datos, p.id, 6, estado.baseOrden);
-        const valida = Number(l.cantidad) > 0;
+        const valida = cantidadOk(l.cantidad);
         return `<div class="linea-orden" data-linea="${esc(p.id)}">
           <div class="linea-ref"><b>${esc(p.ref)}</b><small>${esc(p.nombre)}</small></div>
           <div class="linea-datos">Stock <b>${num(p.stock)}</b>${enFabricacion(p.id) ? ` + ${num(enFabricacion(p.id))} en fabr.` : ''}<br>Venta <b>${num(c.media, c.media < 10 ? 1 : 0)}</b>/mes (${NOMBRE_BASE[estado.baseOrden]})</div>
@@ -122,7 +128,7 @@
   }
 
   function lineasValidas() {
-    return estado.orden.filter(l => Number(l.cantidad) > 0).map(l => ({ productoId: l.productoId, cantidad: Number(l.cantidad) }));
+    return estado.orden.filter(l => cantidadOk(l.cantidad)).map(l => ({ productoId: l.productoId, cantidad: Number(l.cantidad) }));
   }
 
   function renderResultados() {
@@ -133,7 +139,7 @@
     $('planVacio').hidden = validas.length > 0;
     $('planResultados').hidden = !validas.length;
     if (hayLineas && !validas.length) {
-      $('planVacio').innerHTML = '<strong>Introduce una cantidad mayor que 0</strong> en alguna línea para calcular la orden.';
+      $('planVacio').innerHTML = '<strong>Introduce una cantidad entera mayor que 0</strong> en alguna línea para calcular la orden.';
     } else if (!hayLineas) {
       $('planVacio').innerHTML = '<strong>La orden está vacía.</strong><br>Pulsa <b>Fabricar</b> en una referencia (por ejemplo, el disco de sisal Ø200) para ver materiales, máquinas, costes y tiempo de venta.';
     }
@@ -338,7 +344,7 @@
       if (!input) return;
       const linea = estado.orden.find(l => l.productoId === input.dataset.cantidad);
       linea.cantidad = input.value;
-      input.parentElement.classList.toggle('invalida', !(Number(input.value) > 0));
+      input.parentElement.classList.toggle('invalida', !cantidadOk(input.value));
       renderResultados();
     });
     $('ordenLineas').addEventListener('click', ev => {
@@ -362,6 +368,7 @@
     const operario = $('costeOperario');
     operario.value = datos.config.costeOperarioHora;
     operario.addEventListener('input', () => {
+      if (operario.value.trim() === '') return; // campo a medio escribir: se mantiene el último valor
       const v = Number(operario.value);
       if (Number.isFinite(v) && v >= 0) { datos.config.costeOperarioHora = v; renderResultados(); }
     });
@@ -420,7 +427,7 @@
         <span class="semaforo-nombre"><b>${esc(f.nombre)}</b><small>${num(f.stock + f.enFabricacion)} uds · ${num(f.media)}/mes</small></span>
         <span class="semaforo-pista" aria-hidden="true">
           ${ZONAS.map(z => `<i style="background:${fondoZona(z.estado)}"></i>`).join('')}
-          <span class="semaforo-marca" style="left:${pos.toFixed(2)}%;background:${color}"></span>
+          ${f.cobertura === null ? '' : `<span class="semaforo-marca" style="left:${pos.toFixed(2)}%;background:${color}"></span>`}
           <span class="semaforo-valor" style="left:${pos.toFixed(2)}%" data-lado="${pos > 80 ? 'izq' : 'der'}">${valor}</span>
         </span>
         <span class="semaforo-estado">${chip('cobertura', f.estado)}</span>

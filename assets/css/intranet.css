@@ -382,5 +382,6 @@ details.ver-datos .tabla-scroll { margin-top: 8px; }
   .banda .etiqueta-linea { border-color: var(--linea); color: var(--tinta-2); }
   .contenido { margin-top: 0; padding: 0; max-width: none; }
   .tarjeta, .kpi { box-shadow: none; break-inside: avoid; }
+  .tabla-scroll { overflow: visible; }
   .estado, .chip { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
 }

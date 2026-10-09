@@ -114,7 +114,9 @@
     try {
       const crudo = localStorage.getItem(CLAVE_ORDENES);
       const lista = crudo ? JSON.parse(crudo) : [];
-      return lista.map(o => ({ ...o, fecha: new Date(o.fecha) }));
+      return lista
+        .filter(o => o && Array.isArray(o.lineas))
+        .map(o => ({ ...o, fecha: new Date(o.fecha) }));
     } catch (e) {
       return ordenesEnMemoria || [];
     }
@@ -228,9 +230,12 @@
     const canvas = document.getElementById(idCanvas);
     if (!canvas) return null;
     if (!hayChart) {
-      canvas.outerHTML = '<div class="grafica-sin-conexion">Gráfica no disponible sin conexión. Los datos están en la tabla.</div>';
+      canvas.outerHTML = '<div class="grafica-sin-conexion">Gráfica no disponible sin conexión.</div>';
       return null;
     }
+    // Libera las gráficas cuyo canvas ya no está en la página (se re-renderizó su contenedor):
+    // si no, Chart.js las mantiene vivas y escuchando cambios del documento.
+    Object.values(window.Chart.instances).forEach(g => { if (!g.canvas || !g.canvas.isConnected) g.destroy(); });
     const existente = window.Chart.getChart(canvas);
     if (existente) existente.destroy();
     return new window.Chart(canvas, config);
