@@ -8,11 +8,10 @@
     <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
     <style>
         :root {
-            --azul: #1a1893;
-            --azul-oscuro: #121066;
-            --azul-medio: #33318f;
-            --azul-claro: #5a57d6;
             --rojo: #a70013;
+            --rojo-oscuro: #7a000e;
+            --rojo-medio: #c1172a;
+            --rojo-claro: #d63d4c;
             --gris-900: #292929;
             --gris-700: #555351;
             --gris-500: #8c8c8c;
@@ -21,7 +20,7 @@
             --verde: #1e8e3e;
             --blanco: #ffffff;
             --radio: 14px;
-            --sombra: 0 1px 2px rgba(21, 20, 80, .06), 0 8px 24px rgba(21, 20, 80, .08);
+            --sombra: 0 1px 2px rgba(90, 8, 14, .06), 0 8px 24px rgba(90, 8, 14, .08);
         }
 
         * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -54,7 +53,7 @@
             font-size: 1.25rem;
             font-weight: 800;
             letter-spacing: .06em;
-            color: var(--azul);
+            color: var(--rojo);
         }
         .topbar-derecha { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
         .chip-contacto {
@@ -70,7 +69,7 @@
             background: #fbfbfd;
             transition: border-color .15s, color .15s;
         }
-        .chip-contacto:hover { border-color: var(--azul-claro); color: var(--azul); }
+        .chip-contacto:hover { border-color: var(--rojo-claro); color: var(--rojo); }
         .chip-contacto svg { width: 14px; height: 14px; flex: none; }
 
         .btn {
@@ -92,16 +91,16 @@
             border-color: #d9d9e3;
             color: var(--gris-700);
         }
-        .btn-secundario:hover { border-color: var(--azul-claro); color: var(--azul); }
+        .btn-secundario:hover { border-color: var(--rojo-claro); color: var(--rojo); }
         .btn-principal {
-            background: var(--azul);
+            background: var(--rojo);
             color: var(--blanco);
         }
-        .btn-principal:hover { background: var(--azul-medio); }
+        .btn-principal:hover { background: var(--rojo-medio); }
 
         /* ---------- Cabecera ---------- */
         .hero {
-            background: linear-gradient(135deg, var(--azul-oscuro) 0%, var(--azul) 55%, var(--azul-medio) 100%);
+            background: linear-gradient(135deg, var(--rojo-oscuro) 0%, var(--rojo) 55%, var(--rojo-medio) 100%);
             color: var(--blanco);
             padding: 34px clamp(16px, 4vw, 40px) 30px;
         }
@@ -115,11 +114,11 @@
             padding: 5px 12px;
             border-radius: 999px;
         }
-        .etiqueta-roja { background: var(--rojo); color: var(--blanco); }
-        .etiqueta-linea { border: 1px solid rgba(255,255,255,.35); color: #d9d8f5; }
+        .etiqueta-roja { background: var(--blanco); color: var(--rojo); }
+        .etiqueta-linea { border: 1px solid rgba(255,255,255,.35); color: #f6d7da; }
         .hero h1 { font-size: clamp(1.5rem, 3.2vw, 2.1rem); font-weight: 800; letter-spacing: -.01em; }
-        .hero p { margin-top: 8px; color: #c7c6ee; font-size: clamp(.9rem, 1.6vw, 1.02rem); max-width: 62ch; }
-        .hero .fecha-simulacion { margin-top: 14px; font-size: .78rem; color: #9d9cd8; }
+        .hero p { margin-top: 8px; color: #f3c6ca; font-size: clamp(.9rem, 1.6vw, 1.02rem); max-width: 62ch; }
+        .hero .fecha-simulacion { margin-top: 14px; font-size: .78rem; color: #dd969e; }
 
         /* ---------- Distribución ---------- */
         .layout {
@@ -143,13 +142,13 @@
             box-shadow: var(--sombra);
             padding: 20px 22px;
         }
-        .tarjeta-destacada { border: 1px solid #c9c8f0; border-left: 5px solid var(--azul); }
+        .tarjeta-destacada { border: 1px solid #efc4c9; border-left: 5px solid var(--rojo); }
         .tarjeta-titulo {
             font-size: .78rem;
             font-weight: 700;
             text-transform: uppercase;
             letter-spacing: .1em;
-            color: var(--azul);
+            color: var(--rojo);
             display: flex;
             align-items: center;
             justify-content: space-between;
@@ -170,7 +169,7 @@
             color: var(--gris-700);
             margin-bottom: 8px;
         }
-        .valor-campo { font-weight: 700; color: var(--azul); white-space: nowrap; }
+        .valor-campo { font-weight: 700; color: var(--rojo); white-space: nowrap; }
         .valor-neutro { color: var(--gris-900); font-weight: 700; }
         .pista { display: flex; justify-content: space-between; font-size: .7rem; color: var(--gris-500); margin-top: 4px; }
 
@@ -185,12 +184,12 @@
         input[type=range]::-webkit-slider-runnable-track {
             height: 6px;
             border-radius: 3px;
-            background: linear-gradient(90deg, var(--azul-claro), var(--azul));
+            background: linear-gradient(90deg, var(--rojo-claro), var(--rojo));
         }
         input[type=range]::-moz-range-track {
             height: 6px;
             border-radius: 3px;
-            background: linear-gradient(90deg, var(--azul-claro), var(--azul));
+            background: linear-gradient(90deg, var(--rojo-claro), var(--rojo));
         }
         input[type=range]::-webkit-slider-thumb {
             -webkit-appearance: none;
@@ -199,18 +198,18 @@
             margin-top: -6px;
             border-radius: 50%;
             background: var(--blanco);
-            border: 3px solid var(--azul);
-            box-shadow: 0 1px 4px rgba(26, 24, 147, .35);
+            border: 3px solid var(--rojo);
+            box-shadow: 0 1px 4px rgba(167, 0, 19, .35);
         }
         input[type=range]::-moz-range-thumb {
             height: 18px;
             width: 18px;
             border-radius: 50%;
             background: var(--blanco);
-            border: 3px solid var(--azul);
-            box-shadow: 0 1px 4px rgba(26, 24, 147, .35);
+            border: 3px solid var(--rojo);
+            box-shadow: 0 1px 4px rgba(167, 0, 19, .35);
         }
-        input[type=range]:focus-visible { outline: 2px solid var(--azul-claro); outline-offset: 4px; border-radius: 4px; }
+        input[type=range]:focus-visible { outline: 2px solid var(--rojo-claro); outline-offset: 4px; border-radius: 4px; }
 
         .rejilla-numeros { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 16px; }
         .campo-numero label { display: block; font-size: .76rem; color: var(--gris-500); margin-bottom: 5px; }
@@ -223,7 +222,7 @@
             background: #fbfbfd;
             transition: border-color .15s;
         }
-        .campo-numero .entrada:focus-within { border-color: var(--azul-claro); }
+        .campo-numero .entrada:focus-within { border-color: var(--rojo-claro); }
         .campo-numero input {
             width: 100%;
             border: none;
@@ -268,7 +267,7 @@
         .kpi-detalle { font-size: .72rem; color: var(--gris-500); margin-top: 2px; }
         .kpi-positivo .kpi-valor { color: var(--verde); }
         .kpi-negativo .kpi-valor { color: var(--rojo); }
-        .kpi-marca .kpi-valor { color: var(--azul); }
+        .kpi-marca .kpi-valor { color: var(--rojo); }
 
         /* ---------- Gráficos ---------- */
         .contenedor-grafico { position: relative; width: 100%; }
@@ -277,15 +276,15 @@
 
         /* ---------- Resumen ---------- */
         .resumen {
-            background: linear-gradient(135deg, #eef0ff, #e4e6fb);
-            border: 1px solid #c9c8f0;
-            border-left: 5px solid var(--azul);
+            background: linear-gradient(135deg, #fdeef0, #fbe2e5);
+            border: 1px solid #efc4c9;
+            border-left: 5px solid var(--rojo);
             border-radius: var(--radio);
             padding: 18px 22px;
             font-size: 1rem;
             color: var(--gris-700);
         }
-        .resumen strong { color: var(--azul); }
+        .resumen strong { color: var(--rojo); }
         .resumen .cifra { color: var(--verde); font-size: 1.4rem; font-weight: 800; }
         .resumen .cifra-negra { color: var(--gris-900); font-weight: 800; }
         .resumen-negativa { border-left-color: var(--rojo); }
@@ -326,7 +325,7 @@
         details.metodologia summary {
             cursor: pointer;
             font-weight: 700;
-            color: var(--azul);
+            color: var(--rojo);
             font-size: .78rem;
             text-transform: uppercase;
             letter-spacing: .09em;
@@ -344,8 +343,8 @@
 
         /* ---------- Pie ---------- */
         footer {
-            background: var(--azul-oscuro);
-            color: #b9b8e4;
+            background: var(--rojo-oscuro);
+            color: #f0c8cc;
             padding: 34px clamp(16px, 4vw, 40px);
         }
         .pie-inner { max-width: 1280px; margin: 0 auto; }
@@ -358,17 +357,17 @@
             font-weight: 700;
             letter-spacing: .12em;
             text-transform: uppercase;
-            color: #8886c8;
+            color: #d18a92;
             margin-bottom: 9px;
         }
-        .pie-seccion p, .pie-seccion a { font-size: .85rem; color: #b9b8e4; text-decoration: none; display: block; margin-bottom: 4px; }
+        .pie-seccion p, .pie-seccion a { font-size: .85rem; color: #f0c8cc; text-decoration: none; display: block; margin-bottom: 4px; }
         .pie-seccion a:hover { color: var(--blanco); }
         .pie-legal {
             border-top: 1px solid rgba(255,255,255,.12);
             margin-top: 26px;
             padding-top: 16px;
             font-size: .74rem;
-            color: #8886c8;
+            color: #d18a92;
             display: flex;
             justify-content: space-between;
             gap: 12px;
@@ -667,10 +666,10 @@
             new Date().toLocaleDateString('es-ES', { day: '2-digit', month: 'long', year: 'numeric' });
 
         // ---------- Gráficos ----------
-        const colorDisco = 'rgba(90, 87, 214, 0.9)';    // Índigo claro de marca
-        const bordeDisco = '#5a57d6';
-        const colorLabor = 'rgba(26, 24, 147, 0.92)';   // Índigo corporativo
-        const bordeLabor = '#1a1893';
+        const colorDisco = 'rgba(214, 61, 76, 0.9)';    // Rojo claro de marca
+        const bordeDisco = '#d63d4c';
+        const colorLabor = 'rgba(167, 0, 19, 0.92)';    // Rojo corporativo
+        const bordeLabor = '#a70013';
 
         const chartCoste = new Chart(document.getElementById('costChart'), {
             type: 'bar',
