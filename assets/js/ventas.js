@@ -95,7 +95,7 @@
         const der = Math.min(chart.chartArea.right, x.getPixelForValue(35) + paso);
         const ctx = chart.ctx;
         ctx.save();
-        ctx.fillStyle = 'rgba(167, 0, 19, 0.05)';
+        ctx.fillStyle = 'rgba(26, 24, 147, 0.05)';
         ctx.fillRect(izq, chart.chartArea.top, der - izq, chart.chartArea.bottom - chart.chartArea.top);
         ctx.restore();
       },

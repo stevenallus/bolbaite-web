@@ -21,7 +21,7 @@ Dos herramientas internas, en modo **demo con datos inventados**, para enseñar 
 - HTML, CSS y JS estáticos, coherentes con el resto del repo. Sin framework ni paso de build.
 - **Sin módulos ES** (no funcionan con `file://`). Cada JS es un script clásico que publica un espacio de nombres global (`window.BolbaiteDatos`, `window.BolbaiteCalculos`…) y, si existe `module`, también lo exporta con `module.exports` para poder probarlo con Node.
 - Chart.js `4.4.1` desde jsDelivr (la misma versión que la calculadora).
-- Estilo de las herramientas internas: rojo corporativo `#a70013` y grises, igual que `calculadora_comercial_bolbaite.html`.
+- Estilo: tema de Industrial Bolbaite, con el azul corporativo `#1a1893` y la tipografía Arimo de la web pública (`index.html`). El rojo se reserva para estados críticos. *(Cambiado a petición del usuario: la primera versión usaba el rojo de la calculadora comercial.)*
 - Páginas internas: **no** se enlazan desde la web pública. Se documentan en el README.
 - Datos deterministas: generador con semilla fija y fechas relativas a "hoy" (que se puede inyectar para los tests).
 - Las órdenes confirmadas se guardan en `localStorage` (clave `bolbaite-demo-ordenes`). Todo acceso va dentro de `try/catch` y la página funciona igual sin `localStorage`.

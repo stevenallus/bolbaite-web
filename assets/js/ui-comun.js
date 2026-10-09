@@ -210,7 +210,7 @@
   const hayChart = typeof window.Chart !== 'undefined';
   if (hayChart) {
     const Ch = window.Chart;
-    Ch.defaults.font.family = '"Segoe UI", system-ui, -apple-system, BlinkMacSystemFont, Roboto, Arial, sans-serif';
+    Ch.defaults.font.family = "'Arimo', Arial, Helvetica, sans-serif";
     Ch.defaults.font.size = 12;
     Ch.defaults.color = COLORES.tinta;
     Ch.defaults.borderColor = COLORES.rejilla;

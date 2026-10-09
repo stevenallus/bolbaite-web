@@ -442,7 +442,7 @@
         ctx.lineWidth = 1.5;
         ctx.beginPath(); ctx.moveTo(x, top - 4); ctx.lineTo(x, bottom); ctx.stroke();
         ctx.fillStyle = COLORES.tinta;
-        ctx.font = '600 11px "Segoe UI", system-ui, sans-serif';
+        ctx.font = '700 11px Arimo, Arial, sans-serif';
         ctx.textAlign = 'center';
         ctx.fillText('100 = se fabrica lo que se vende', x, top - 8);
         ctx.restore();
