@@ -374,14 +374,398 @@
     });
   }
 
+  /* ---------- Formato para los textos de las alertas ---------- */
+
+  // Agrupa miles con punto siempre (Intl en es-ES no agrupa números de 4 cifras).
+  function numero(n, decimales = 0) {
+    const [entera, dec] = Math.abs(n).toFixed(decimales).split('.');
+    const agrupada = entera.replace(/\B(?=(\d{3})+(?!\d))/g, '.');
+    return (n < 0 && Number(entera + (dec || '')) !== 0 ? '−' : '') + agrupada + (dec ? ',' + dec : '');
+  }
+
+  function fechaCorta(d) {
+    return String(d.getDate()).padStart(2, '0') + '/' + String(d.getMonth() + 1).padStart(2, '0') + '/' + d.getFullYear();
+  }
+
+  /* ---------- Ventas ---------- */
+
+  function ventasFiltradas(datos, filtros = {}) {
+    const meses = filtros.meses ? new Set(filtros.meses) : null;
+    return lineasVenta(datos).filter(l =>
+      (!filtros.comercialId || l.comercialId === filtros.comercialId) &&
+      (!filtros.provincia || l.provincia === filtros.provincia) &&
+      (!filtros.familiaId || l.familiaId === filtros.familiaId) &&
+      (!filtros.clienteId || l.clienteId === filtros.clienteId) &&
+      (!meses || meses.has(l.mes)));
+  }
+
+  function agregarPor(lineas, clave) {
+    const obtener = typeof clave === 'function' ? clave : l => l[clave];
+    const acumulado = new Map();
+    for (const l of lineas) {
+      const k = obtener(l);
+      let a = acumulado.get(k);
+      if (!a) { a = { clave: k, importe: 0, cantidad: 0 }; acumulado.set(k, a); }
+      a.importe += l.importe;
+      a.cantidad += l.cantidad;
+    }
+    return [...acumulado.values()].sort((a, b) => b.importe - a.importe);
+  }
+
+  function serieMensual(lineas, claves, campo = 'importe') {
+    const indice = new Map(claves.map((k, i) => [k, i]));
+    const serie = claves.map(() => 0);
+    for (const l of lineas) {
+      const i = indice.get(l.mes);
+      if (i !== undefined) serie[i] += l[campo];
+    }
+    return serie;
+  }
+
+  function sumaImporte(lineas) {
+    return lineas.reduce((t, l) => t + l.importe, 0);
+  }
+
+  function variacion(actual, anterior) {
+    return anterior > 0 ? actual / anterior - 1 : null;
+  }
+
+  function kpisVentas(datos, filtros, meses) {
+    const claves = mesesCompletos(datos.hoy, meses);
+    const actuales = ventasFiltradas(datos, { ...filtros, meses: claves });
+    const ventas = sumaImporte(actuales);
+    const anterior = meses >= 36 ? null : sumaImporte(ventasFiltradas(datos, { ...filtros, meses: mesesCompletos(datos.hoy, meses, 12) }));
+    const pedidos = new Set(actuales.map(l => l.pedidoId)).size;
+    const desde = new Date(datos.hoy.getFullYear(), datos.hoy.getMonth() - meses, 1);
+    const hasta = new Date(datos.hoy.getFullYear(), datos.hoy.getMonth(), 1);
+    const clientesNuevos = datos.clientes.filter(c =>
+      (!filtros.comercialId || c.comercialId === filtros.comercialId) &&
+      (!filtros.provincia || c.provincia === filtros.provincia) &&
+      c.fechaAlta >= desde && c.fechaAlta < hasta).length;
+    return {
+      ventas,
+      ventasAnterior: anterior,
+      variacion: anterior === null ? null : variacion(ventas, anterior),
+      clientesActivos: new Set(actuales.map(l => l.clienteId)).size,
+      pedidos,
+      ticketMedio: pedidos ? ventas / pedidos : 0,
+      clientesNuevos,
+      meses: claves,
+    };
+  }
+
+  function clientesDe(datos, comercialId) {
+    return datos.clientes.filter(c => !comercialId || c.comercialId === comercialId);
+  }
+
+  // Pedidos agregados (fecha + cantidad) por grupo, ordenados por fecha.
+  function pedidosAgrupados(lineas, clave) {
+    const grupos = new Map();
+    for (const l of lineas) {
+      const k = clave(l);
+      let g = grupos.get(k);
+      if (!g) { g = { muestra: l, pedidos: new Map() }; grupos.set(k, g); }
+      let p = g.pedidos.get(l.pedidoId);
+      if (!p) { p = { fecha: l.fecha, cantidad: 0 }; g.pedidos.set(l.pedidoId, p); }
+      p.cantidad += l.cantidad;
+    }
+    for (const g of grupos.values()) g.lista = [...g.pedidos.values()].sort((a, b) => a.fecha - b.fecha);
+    return grupos;
+  }
+
+  function mediana(valores) {
+    const v = [...valores].sort((a, b) => a - b);
+    const m = Math.floor(v.length / 2);
+    return v.length % 2 ? v[m] : (v[m - 1] + v[m]) / 2;
+  }
+
+  function intervalos(lista) {
+    const r = [];
+    for (let i = 1; i < lista.length; i++) r.push(diasEntre(lista[i - 1].fecha, lista[i].fecha));
+    return r;
+  }
+
+  // Uds/mes de un conjunto de pedidos. Cada pedido cubre ~`intervalo` días, así que el periodo
+  // va del primer pedido hasta el final de la ventana o hasta que se agota el último pedido.
+  function tasaConsumo(pedidos, finVentana, intervalo) {
+    if (!pedidos.length) return 0;
+    const primero = pedidos[0].fecha;
+    const finCobertura = sumarDias(pedidos[pedidos.length - 1].fecha, intervalo);
+    const fin = finCobertura > finVentana ? finCobertura : finVentana;
+    const dias = Math.max(1, diasEntre(primero, fin));
+    return pedidos.reduce((t, p) => t + p.cantidad, 0) / dias * DIAS_MES;
+  }
+
+  const NOMBRE_BASE = { 3: 'trimestral', 6: 'semestral', 12: 'anual' };
+
+  function alertasBajoConsumo(datos, { base = 6, comercialId } = {}) {
+    const hoy = soloDia(datos.hoy);
+    const hace24m = sumarDias(hoy, -730);
+    const clientes = mapa(datos.clientes);
+    const familias = mapa(datos.familias);
+    const grupos = pedidosAgrupados(ventasFiltradas(datos, { comercialId }), l => l.clienteId + '|' + l.familiaId);
+    const alertas = [];
+    for (const g of grupos.values()) {
+      const lista = g.lista.filter(p => p.fecha > hace24m && p.fecha <= hoy);
+      if (lista.length < 3) continue;
+      const anteriores = lista.filter(p => diasEntre(p.fecha, hoy) > 60);
+      if (anteriores.length < 2) continue;
+      const intervalo = Math.max(1, Math.round(mediana(intervalos(anteriores))));
+      const ventana = Math.min(180, Math.max(60, 2 * intervalo));
+      const inicioReciente = sumarDias(hoy, -ventana);
+      const inicioBase = sumarDias(inicioReciente, -Math.round(base * DIAS_MES));
+      const pedidosBase = lista.filter(p => p.fecha > inicioBase && p.fecha <= inicioReciente);
+      if (!pedidosBase.length) continue;
+      const recientes = lista.filter(p => p.fecha > inicioReciente);
+      const tasaBase = tasaConsumo(pedidosBase, inicioReciente, intervalo);
+      const tasaReciente = tasaConsumo(recientes, hoy, intervalo);
+      const caida = 1 - tasaReciente / tasaBase;
+      if (caida < 0.25) continue;
+      const cli = clientes.get(g.muestra.clienteId);
+      const fam = familias.get(g.muestra.familiaId);
+      const reciente = recientes.length
+        ? `reciente ${numero(tasaReciente)} uds/mes`
+        : `sin pedidos en los últimos ${ventana} días`;
+      alertas.push({
+        clienteId: cli.id,
+        cliente: cli.nombre,
+        comercialId: cli.comercialId,
+        familiaId: fam.id,
+        familia: fam.nombre,
+        caida,
+        tasaBase,
+        tasaReciente,
+        ventana,
+        base,
+        nivel: caida >= 0.5 ? 'critico' : 'aviso',
+        texto: `${cli.nombre} está un ${numero(caida * 100)} % por debajo de su consumo medio de ${fam.nombre} (media ${NOMBRE_BASE[base] || base + ' meses'} ${numero(tasaBase)} uds/mes · ${reciente})`,
+      });
+    }
+    return alertas.sort((a, b) => b.caida - a.caida);
+  }
+
+  const ORDEN_ESTADO_PEDIDO = { retrasado: 0, 'esta-semana': 1, proximas: 2 };
+
+  function alertasProximoPedido(datos, { comercialId } = {}) {
+    const hoy = soloDia(datos.hoy);
+    const hace24m = sumarDias(hoy, -730);
+    const lunes = inicioSemana(hoy);
+    const domingo = sumarDias(lunes, 6);
+    const limiteProximas = sumarDias(domingo, 14);
+    const clientes = mapa(datos.clientes);
+    const productos = mapa(datos.productos);
+    const grupos = pedidosAgrupados(ventasFiltradas(datos, { comercialId }), l => l.clienteId + '|' + l.productoId);
+    const alertas = [];
+    for (const g of grupos.values()) {
+      const lista = g.lista.filter(p => p.fecha > hace24m && p.fecha <= hoy);
+      if (lista.length < 3) continue;
+      const ultimos = lista.slice(-7);
+      const difs = intervalos(ultimos);
+      const intervalo = Math.round(difs.reduce((a, b) => a + b, 0) / difs.length);
+      if (intervalo < 1) continue;
+      const cantidadMedia = ultimos.slice(-6).reduce((t, p) => t + p.cantidad, 0) / Math.min(6, ultimos.length);
+      const ultimo = ultimos[ultimos.length - 1].fecha;
+      const prevista = sumarDias(ultimo, intervalo);
+      let estado = null;
+      let retraso = 0;
+      if (prevista < lunes) {
+        retraso = diasEntre(prevista, hoy);
+        if (retraso <= intervalo) estado = 'retrasado';
+      } else if (prevista <= domingo) {
+        estado = 'esta-semana';
+      } else if (prevista <= limiteProximas) {
+        estado = 'proximas';
+      }
+      if (!estado) continue;
+      const cli = clientes.get(g.muestra.clienteId);
+      const prod = productos.get(g.muestra.productoId);
+      const cuando = estado === 'esta-semana' ? 'le toca esta semana'
+        : estado === 'retrasado' ? `lleva ${retraso} días de retraso`
+        : `previsto el ${fechaCorta(prevista)}`;
+      alertas.push({
+        clienteId: cli.id,
+        cliente: cli.nombre,
+        comercialId: cli.comercialId,
+        productoId: prod.id,
+        producto: prod.nombre,
+        intervalo,
+        cantidadMedia,
+        ultimo,
+        prevista,
+        estado,
+        retraso,
+        texto: `${cli.nombre} pide ${prod.nombre} cada ~${intervalo} días (~${numero(cantidadMedia)} uds). Último pedido ${fechaCorta(ultimo)}: ${cuando}`,
+      });
+    }
+    return alertas.sort((a, b) =>
+      ORDEN_ESTADO_PEDIDO[a.estado] - ORDEN_ESTADO_PEDIDO[b.estado] ||
+      (a.estado === 'retrasado' ? b.retraso - a.retraso : a.prevista - b.prevista));
+  }
+
+  function ultimaVisitaPorCliente(datos) {
+    const m = new Map();
+    for (const v of datos.visitas) {
+      const actual = m.get(v.clienteId);
+      if (!actual || v.fecha > actual) m.set(v.clienteId, v.fecha);
+    }
+    return m;
+  }
+
+  function ultimaCompraPorCliente(datos) {
+    const m = new Map();
+    for (const p of datos.pedidos) {
+      const actual = m.get(p.clienteId);
+      if (!actual || p.fecha > actual) m.set(p.clienteId, p.fecha);
+    }
+    return m;
+  }
+
+  function informeClientesYVisitas(datos, { comercialId } = {}) {
+    const hoy = soloDia(datos.hoy);
+    const clientes = clientesDe(datos, comercialId);
+    const ids = new Set(clientes.map(c => c.id));
+    const porId = mapa(datos.clientes);
+    const ultimaVisita = ultimaVisitaPorCliente(datos);
+    const ultimaCompra = ultimaCompraPorCliente(datos);
+
+    const nuevos = clientes
+      .filter(c => diasEntre(c.fechaAlta, hoy) <= 90)
+      .map(c => {
+        const pedidos = datos.pedidos.filter(p => p.clienteId === c.id);
+        const primera = pedidos.reduce((m, p) => (!m || p.fecha < m ? p.fecha : m), null);
+        const ventas = pedidos.reduce((t, p) => t + p.lineas.reduce((s, l) => s + l.importe, 0), 0);
+        return { clienteId: c.id, cliente: c.nombre, provincia: c.provincia, comercialId: c.comercialId, fechaAlta: c.fechaAlta, primeraCompra: primera, ventas };
+      })
+      .sort((a, b) => b.fechaAlta - a.fechaAlta);
+
+    const ultimasVisitas = datos.visitas
+      .filter(v => ids.has(v.clienteId))
+      .sort((a, b) => b.fecha - a.fecha)
+      .slice(0, 15)
+      .map(v => ({ ...v, cliente: porId.get(v.clienteId).nombre }));
+
+    const sinVisita = clientes
+      .filter(c => { const u = ultimaCompra.get(c.id); return u && diasEntre(u, hoy) <= 183; })
+      .map(c => {
+        const v = ultimaVisita.get(c.id) || null;
+        return { clienteId: c.id, cliente: c.nombre, comercialId: c.comercialId, ultimaVisita: v, dias: v ? diasEntre(v, hoy) : null, ultimaCompra: ultimaCompra.get(c.id) };
+      })
+      .filter(s => s.dias === null || s.dias > 60)
+      .sort((a, b) => (b.dias === null ? Infinity : b.dias) - (a.dias === null ? Infinity : a.dias));
+
+    return { nuevos, ultimasVisitas, sinVisita };
+  }
+
+  function informeMuestras(datos, { comercialId } = {}) {
+    const hoy = soloDia(datos.hoy);
+    const clientes = mapa(datos.clientes);
+    const productos = mapa(datos.productos);
+    const muestras = datos.muestras
+      .filter(m => !comercialId || m.comercialId === comercialId)
+      .map(m => {
+        const dias = diasEntre(m.fechaEnvio, hoy);
+        return { ...m, cliente: clientes.get(m.clienteId).nombre, producto: productos.get(m.productoId).nombre, dias, alerta: m.estado === 'pendiente' && dias > 14 };
+      })
+      .sort((a, b) => b.fechaEnvio - a.fechaEnvio);
+    const recientes = muestras.filter(m => m.dias <= 183);
+    const convertidas = recientes.filter(m => m.estado === 'pedido').length;
+    return {
+      muestras,
+      enviadas6m: recientes.length,
+      convertidas,
+      conversion: recientes.length ? convertidas / recientes.length : null,
+      pendientesAlerta: muestras.filter(m => m.alerta).length,
+    };
+  }
+
+  function alertasCrecimiento(datos, { comercialId } = {}) {
+    const hoy = datos.hoy;
+    const familias = mapa(datos.familias);
+    const periodos = {
+      a12: new Set(mesesCompletos(hoy, 12)), b12: new Set(mesesCompletos(hoy, 12, 12)),
+      a3: new Set(mesesCompletos(hoy, 3)), b3: new Set(mesesCompletos(hoy, 3, 3)),
+    };
+    const alertas = [];
+    for (const c of clientesDe(datos, comercialId)) {
+      const lineas = ventasFiltradas(datos, { clienteId: c.id });
+      const total = (p, fam) => lineas.reduce((t, l) => t + (periodos[p].has(l.mes) && (!fam || l.familiaId === fam) ? l.importe : 0), 0);
+      const a12 = total('a12');
+      if (a12 < 1000) continue;
+      const var12 = variacion(a12, total('b12'));
+      const var3 = variacion(total('a3'), total('b3'));
+      const sube12 = var12 !== null && var12 >= 0.2;
+      const sube3 = var3 !== null && var3 >= 0.2;
+      if (!sube12 && !sube3) continue;
+      const [pa, pb, meses, v] = sube12 ? ['a12', 'b12', 12, var12] : ['a3', 'b3', 3, var3];
+      let mejor = null;
+      for (const famId of new Set(lineas.map(l => l.familiaId))) {
+        const inc = total(pa, famId) - total(pb, famId);
+        if (!mejor || inc > mejor.inc) mejor = { famId, inc };
+      }
+      const fam = familias.get(mejor.famId);
+      alertas.push({
+        clienteId: c.id,
+        cliente: c.nombre,
+        comercialId: c.comercialId,
+        var12,
+        var3,
+        meses,
+        familiaId: fam.id,
+        familia: fam.nombre,
+        incremento: mejor.inc,
+        texto: `${c.nombre} sube un ${numero(v * 100)} % en los últimos ${meses} meses (${numero(total(pa))} € frente a ${numero(total(pb))} €), sobre todo por ${fam.nombre} (+${numero(mejor.inc)} €)`,
+      });
+    }
+    return alertas.sort((a, b) => Math.max(b.var12 || 0, b.var3 || 0) - Math.max(a.var12 || 0, a.var3 || 0));
+  }
+
+  function carteraClientes(datos, filtros = {}) {
+    const familias = mapa(datos.familias);
+    const ultimaVisita = ultimaVisitaPorCliente(datos);
+    const ultimaCompra = ultimaCompraPorCliente(datos);
+    const a12 = new Set(mesesCompletos(datos.hoy, 12));
+    const b12 = new Set(mesesCompletos(datos.hoy, 12, 12));
+    const porCliente = new Map();
+    for (const l of ventasFiltradas(datos, { familiaId: filtros.familiaId })) {
+      let c = porCliente.get(l.clienteId);
+      if (!c) { c = { a: 0, b: 0, familias: new Set() }; porCliente.set(l.clienteId, c); }
+      if (a12.has(l.mes)) { c.a += l.importe; c.familias.add(l.familiaId); }
+      else if (b12.has(l.mes)) c.b += l.importe;
+    }
+    return datos.clientes
+      .filter(c =>
+        (!filtros.comercialId || c.comercialId === filtros.comercialId) &&
+        (!filtros.provincia || c.provincia === filtros.provincia) &&
+        (!filtros.familiaId || porCliente.has(c.id)))
+      .map(c => {
+        const v = porCliente.get(c.id) || { a: 0, b: 0, familias: new Set() };
+        return {
+          clienteId: c.id,
+          cliente: c.nombre,
+          provincia: c.provincia,
+          comercialId: c.comercialId,
+          fechaAlta: c.fechaAlta,
+          ventas12: v.a,
+          variacion12: variacion(v.a, v.b),
+          familias: [...v.familias].map(id => familias.get(id).nombre),
+          ultimaCompra: ultimaCompra.get(c.id) || null,
+          ultimaVisita: ultimaVisita.get(c.id) || null,
+        };
+      })
+      .sort((a, b) => b.ventas12 - a.ventas12);
+  }
+
   const api = {
     DIA, DIAS_MES, LOTE_ESTANDAR,
     mesClave, soloDia, sumarDias, diasEntre, mesesCompletos, inicioSemana,
-    mapa, lineasVenta,
+    mapa, lineasVenta, numero, fechaCorta,
     ventaMediaMensual, unidadesEnFabricacion, stockMaterialDisponible,
     estadoMaterial, necesidadesMaterial, necesidadesMaquina, resumenOrden,
     costeUnitarioEstandar, mesesParaVender, estadoTiempoVenta, cantidadSugerida,
     cobertura, estadoCobertura, tendenciaFamilia, resumenProductos, resumenFamilias,
+    ventasFiltradas, agregarPor, serieMensual, kpisVentas, variacion,
+    alertasBajoConsumo, alertasProximoPedido, informeClientesYVisitas,
+    informeMuestras, alertasCrecimiento, carteraClientes,
   };
 
   if (typeof module !== 'undefined' && module.exports) module.exports = api;
