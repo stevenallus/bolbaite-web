@@ -1,0 +1,890 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Calculadora de Costes de Pulido · Grupo Bolbaite</title>
+    <meta name="description" content="Herramienta comercial de Grupo Bolbaite: comparativa de coste por pieza entre disco cerámico estándar y disco Albait PSG.">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+    <style>
+        :root {
+            --azul: #1a1893;
+            --azul-oscuro: #121066;
+            --azul-medio: #33318f;
+            --azul-claro: #5a57d6;
+            --rojo: #a70013;
+            --gris-900: #292929;
+            --gris-700: #555351;
+            --gris-500: #8c8c8c;
+            --gris-300: #bdbdbd;
+            --gris-100: #f4f4f4;
+            --verde: #1e8e3e;
+            --blanco: #ffffff;
+            --radio: 14px;
+            --sombra: 0 1px 2px rgba(21, 20, 80, .06), 0 8px 24px rgba(21, 20, 80, .08);
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        html { scroll-behavior: smooth; }
+
+        body {
+            font-family: "Segoe UI", -apple-system, BlinkMacSystemFont, Roboto, "Helvetica Neue", Arial, sans-serif;
+            background: var(--gris-100);
+            color: var(--gris-900);
+            line-height: 1.5;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        /* ---------- Barra superior ---------- */
+        .topbar {
+            background: var(--blanco);
+            border-bottom: 1px solid #e8e8ee;
+            padding: 14px clamp(16px, 4vw, 40px);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 16px;
+            flex-wrap: wrap;
+        }
+        .marca { display: flex; align-items: center; gap: 14px; min-width: 0; }
+        .marca img { height: 46px; width: auto; display: block; }
+        .logo-fallback {
+            display: none;
+            font-size: 1.25rem;
+            font-weight: 800;
+            letter-spacing: .06em;
+            color: var(--azul);
+        }
+        .topbar-derecha { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+        .chip-contacto {
+            display: inline-flex;
+            align-items: center;
+            gap: 7px;
+            font-size: .82rem;
+            color: var(--gris-700);
+            text-decoration: none;
+            padding: 7px 12px;
+            border-radius: 999px;
+            border: 1px solid #e8e8ee;
+            background: #fbfbfd;
+            transition: border-color .15s, color .15s;
+        }
+        .chip-contacto:hover { border-color: var(--azul-claro); color: var(--azul); }
+        .chip-contacto svg { width: 14px; height: 14px; flex: none; }
+
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            font-size: .85rem;
+            font-weight: 600;
+            padding: 10px 16px;
+            border-radius: 10px;
+            border: 1px solid transparent;
+            cursor: pointer;
+            transition: background .15s, border-color .15s, transform .05s;
+        }
+        .btn:active { transform: translateY(1px); }
+        .btn svg { width: 15px; height: 15px; }
+        .btn-secundario {
+            background: var(--blanco);
+            border-color: #d9d9e3;
+            color: var(--gris-700);
+        }
+        .btn-secundario:hover { border-color: var(--azul-claro); color: var(--azul); }
+        .btn-principal {
+            background: var(--azul);
+            color: var(--blanco);
+        }
+        .btn-principal:hover { background: var(--azul-medio); }
+
+        /* ---------- Cabecera ---------- */
+        .hero {
+            background: linear-gradient(135deg, var(--azul-oscuro) 0%, var(--azul) 55%, var(--azul-medio) 100%);
+            color: var(--blanco);
+            padding: 34px clamp(16px, 4vw, 40px) 30px;
+        }
+        .hero-inner { max-width: 1280px; margin: 0 auto; }
+        .hero-etiquetas { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 14px; }
+        .etiqueta {
+            font-size: .68rem;
+            font-weight: 700;
+            letter-spacing: .12em;
+            text-transform: uppercase;
+            padding: 5px 12px;
+            border-radius: 999px;
+        }
+        .etiqueta-roja { background: var(--rojo); color: var(--blanco); }
+        .etiqueta-linea { border: 1px solid rgba(255,255,255,.35); color: #d9d8f5; }
+        .hero h1 { font-size: clamp(1.5rem, 3.2vw, 2.1rem); font-weight: 800; letter-spacing: -.01em; }
+        .hero p { margin-top: 8px; color: #c7c6ee; font-size: clamp(.9rem, 1.6vw, 1.02rem); max-width: 62ch; }
+        .hero .fecha-simulacion { margin-top: 14px; font-size: .78rem; color: #9d9cd8; }
+
+        /* ---------- Distribución ---------- */
+        .layout {
+            max-width: 1280px;
+            margin: -18px auto 0;
+            padding: 0 clamp(16px, 4vw, 40px) 40px;
+            display: grid;
+            grid-template-columns: minmax(0, 360px) minmax(0, 1fr);
+            gap: 22px;
+            align-items: start;
+        }
+        @media (max-width: 1023px) { .layout { grid-template-columns: 1fr; margin-top: 16px; } }
+
+        .columna-parametros, .columna-resultados { display: flex; flex-direction: column; gap: 18px; min-width: 0; }
+
+        /* ---------- Tarjetas ---------- */
+        .tarjeta {
+            background: var(--blanco);
+            border: 1px solid #e8e8ee;
+            border-radius: var(--radio);
+            box-shadow: var(--sombra);
+            padding: 20px 22px;
+        }
+        .tarjeta-destacada { border: 1px solid #c9c8f0; border-left: 5px solid var(--azul); }
+        .tarjeta-titulo {
+            font-size: .78rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: .1em;
+            color: var(--azul);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 10px;
+            margin-bottom: 16px;
+        }
+        .tarjeta-destacada .tarjeta-titulo { font-size: .95rem; text-transform: none; letter-spacing: 0; }
+
+        /* ---------- Controles ---------- */
+        .campo { margin-bottom: 18px; }
+        .campo:last-child { margin-bottom: 0; }
+        .etiqueta-campo {
+            display: flex;
+            justify-content: space-between;
+            align-items: baseline;
+            gap: 10px;
+            font-size: .86rem;
+            color: var(--gris-700);
+            margin-bottom: 8px;
+        }
+        .valor-campo { font-weight: 700; color: var(--azul); white-space: nowrap; }
+        .valor-neutro { color: var(--gris-900); font-weight: 700; }
+        .pista { display: flex; justify-content: space-between; font-size: .7rem; color: var(--gris-500); margin-top: 4px; }
+
+        input[type=range] {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 100%;
+            height: 22px;
+            background: transparent;
+            cursor: pointer;
+        }
+        input[type=range]::-webkit-slider-runnable-track {
+            height: 6px;
+            border-radius: 3px;
+            background: linear-gradient(90deg, var(--azul-claro), var(--azul));
+        }
+        input[type=range]::-moz-range-track {
+            height: 6px;
+            border-radius: 3px;
+            background: linear-gradient(90deg, var(--azul-claro), var(--azul));
+        }
+        input[type=range]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            height: 18px;
+            width: 18px;
+            margin-top: -6px;
+            border-radius: 50%;
+            background: var(--blanco);
+            border: 3px solid var(--azul);
+            box-shadow: 0 1px 4px rgba(26, 24, 147, .35);
+        }
+        input[type=range]::-moz-range-thumb {
+            height: 18px;
+            width: 18px;
+            border-radius: 50%;
+            background: var(--blanco);
+            border: 3px solid var(--azul);
+            box-shadow: 0 1px 4px rgba(26, 24, 147, .35);
+        }
+        input[type=range]:focus-visible { outline: 2px solid var(--azul-claro); outline-offset: 4px; border-radius: 4px; }
+
+        .rejilla-numeros { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 16px; }
+        .campo-numero label { display: block; font-size: .76rem; color: var(--gris-500); margin-bottom: 5px; }
+        .campo-numero .entrada {
+            display: flex;
+            align-items: center;
+            border: 1px solid #d9d9e3;
+            border-radius: 9px;
+            overflow: hidden;
+            background: #fbfbfd;
+            transition: border-color .15s;
+        }
+        .campo-numero .entrada:focus-within { border-color: var(--azul-claro); }
+        .campo-numero input {
+            width: 100%;
+            border: none;
+            background: transparent;
+            padding: 8px 10px;
+            font: inherit;
+            font-weight: 600;
+            color: var(--gris-900);
+            outline: none;
+        }
+        .campo-numero input::-webkit-outer-spin-button,
+        .campo-numero input::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
+        .campo-numero input[type=number] { -moz-appearance: textfield; appearance: textfield; }
+        .campo-numero .unidad {
+            font-size: .74rem;
+            color: var(--gris-500);
+            padding: 0 10px 0 4px;
+            border-left: 1px solid #ececf4;
+            align-self: stretch;
+            display: flex;
+            align-items: center;
+        }
+
+        .nota-discretiva { font-size: .74rem; color: var(--gris-500); margin-top: 10px; }
+
+        /* ---------- KPIs ---------- */
+        .rejilla-kpis {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 14px;
+        }
+        @media (max-width: 640px) { .rejilla-kpis { grid-template-columns: repeat(2, 1fr); } }
+        .kpi {
+            background: var(--blanco);
+            border: 1px solid #e8e8ee;
+            border-radius: var(--radio);
+            box-shadow: var(--sombra);
+            padding: 14px 16px;
+        }
+        .kpi-nombre { font-size: .68rem; font-weight: 700; letter-spacing: .09em; text-transform: uppercase; color: var(--gris-500); }
+        .kpi-valor { font-size: clamp(1.25rem, 2.4vw, 1.65rem); font-weight: 800; margin-top: 4px; color: var(--gris-900); }
+        .kpi-detalle { font-size: .72rem; color: var(--gris-500); margin-top: 2px; }
+        .kpi-positivo .kpi-valor { color: var(--verde); }
+        .kpi-negativo .kpi-valor { color: var(--rojo); }
+        .kpi-marca .kpi-valor { color: var(--azul); }
+
+        /* ---------- Gráficos ---------- */
+        .contenedor-grafico { position: relative; width: 100%; }
+        .grafico-principal { height: 300px; }
+        .grafico-volumen { height: 210px; }
+
+        /* ---------- Resumen ---------- */
+        .resumen {
+            background: linear-gradient(135deg, #eef0ff, #e4e6fb);
+            border: 1px solid #c9c8f0;
+            border-left: 5px solid var(--azul);
+            border-radius: var(--radio);
+            padding: 18px 22px;
+            font-size: 1rem;
+            color: var(--gris-700);
+        }
+        .resumen strong { color: var(--azul); }
+        .resumen .cifra { color: var(--verde); font-size: 1.4rem; font-weight: 800; }
+        .resumen .cifra-negra { color: var(--gris-900); font-weight: 800; }
+        .resumen-negativa { border-left-color: var(--rojo); }
+        .resumen-negativa strong { color: var(--rojo); }
+
+        /* ---------- Volumen ---------- */
+        .rejilla-volumen { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; margin-bottom: 18px; }
+        @media (max-width: 640px) { .rejilla-volumen { grid-template-columns: 1fr; } }
+        .metrica-volumen {
+            background: #fbfbfe;
+            border: 1px solid #ececf4;
+            border-radius: 11px;
+            padding: 13px 15px;
+        }
+        .metrica-volumen .nombre { font-size: .7rem; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; color: var(--gris-500); }
+        .metrica-volumen .valor { font-size: 1.3rem; font-weight: 800; margin-top: 3px; }
+        .metrica-volumen .valor.positivo { color: var(--verde); }
+        .metrica-volumen .valor.negativo { color: var(--rojo); }
+        .metrica-volumen .detalle { font-size: .72rem; color: var(--gris-500); margin-top: 2px; }
+
+        /* ---------- Argumentario ---------- */
+        .argumentario ul { list-style: none; }
+        .argumentario li {
+            display: flex;
+            gap: 11px;
+            align-items: flex-start;
+            padding: 9px 0;
+            border-bottom: 1px dashed #ececf4;
+            font-size: .93rem;
+            color: var(--gris-700);
+        }
+        .argumentario li:last-child { border-bottom: none; }
+        .argumentario li svg { width: 17px; height: 17px; flex: none; margin-top: 2px; color: var(--verde); }
+        .argumentario li strong { color: var(--gris-900); }
+
+        /* ---------- Metodología ---------- */
+        details.metodologia { font-size: .84rem; color: var(--gris-700); }
+        details.metodologia summary {
+            cursor: pointer;
+            font-weight: 700;
+            color: var(--azul);
+            font-size: .78rem;
+            text-transform: uppercase;
+            letter-spacing: .09em;
+        }
+        details.metodologia ul { margin: 10px 0 4px 18px; }
+        details.metodologia li { margin-bottom: 4px; }
+        details.metodologia code {
+            background: var(--gris-100);
+            border: 1px solid #e8e8ee;
+            border-radius: 5px;
+            padding: 1px 6px;
+            font-size: .8rem;
+        }
+        .aviso { font-size: .74rem; color: var(--gris-500); margin-top: 14px; }
+
+        /* ---------- Pie ---------- */
+        footer {
+            background: var(--azul-oscuro);
+            color: #b9b8e4;
+            padding: 34px clamp(16px, 4vw, 40px);
+        }
+        .pie-inner { max-width: 1280px; margin: 0 auto; }
+        .pie-rejilla { display: grid; grid-template-columns: 2fr 1fr 1fr; gap: 28px; }
+        @media (max-width: 820px) { .pie-rejilla { grid-template-columns: 1fr; } }
+        .pie-nombre { color: var(--blanco); font-weight: 800; letter-spacing: .04em; font-size: 1.05rem; }
+        .pie-tagline { margin-top: 6px; font-size: .84rem; }
+        .pie-seccion h3 {
+            font-size: .7rem;
+            font-weight: 700;
+            letter-spacing: .12em;
+            text-transform: uppercase;
+            color: #8886c8;
+            margin-bottom: 9px;
+        }
+        .pie-seccion p, .pie-seccion a { font-size: .85rem; color: #b9b8e4; text-decoration: none; display: block; margin-bottom: 4px; }
+        .pie-seccion a:hover { color: var(--blanco); }
+        .pie-legal {
+            border-top: 1px solid rgba(255,255,255,.12);
+            margin-top: 26px;
+            padding-top: 16px;
+            font-size: .74rem;
+            color: #8886c8;
+            display: flex;
+            justify-content: space-between;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+
+        /* ---------- Impresión ---------- */
+        @media print {
+            body { background: #fff; }
+            .no-print { display: none !important; }
+            .layout { grid-template-columns: minmax(0, 360px) minmax(0, 1fr); gap: 14px; }
+            .tarjeta, .kpi, .metrica-volumen { box-shadow: none; break-inside: avoid; }
+            .hero, footer, .resumen, .kpi-positivo, .kpi-negativo, .kpi-marca, .etiqueta-roja {
+                -webkit-print-color-adjust: exact;
+                print-color-adjust: exact;
+            }
+            .contenedor-grafico { break-inside: avoid; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Barra superior -->
+    <div class="topbar">
+        <div class="marca">
+            <img src="https://cdn.pymesenlared.es/img/364/logo.png" alt="Grupo Bolbaite"
+                 onerror="this.style.display='none';document.getElementById('marcaTexto').style.display='block';">
+            <span id="marcaTexto" class="logo-fallback">GRUPO BOLBAITE</span>
+        </div>
+        <div class="topbar-derecha">
+            <a class="chip-contacto no-print" href="tel:+34962223111">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.12.9.34 1.79.66 2.63a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.45-1.23a2 2 0 0 1 2.11-.45c.84.32 1.73.54 2.63.66A2 2 0 0 1 22 16.92z"/></svg>
+                962 223 111
+            </a>
+            <a class="chip-contacto no-print" href="mailto:gestion@industrialbolbaite.es">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m22 7-10 6L2 7"/></svg>
+                gestion@industrialbolbaite.es
+            </a>
+            <button type="button" class="btn btn-secundario no-print" onclick="restablecer()">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 1 0 3-6.7L3 8"/><path d="M3 3v5h5"/></svg>
+                Restablecer
+            </button>
+            <button type="button" class="btn btn-principal no-print" onclick="window.print()">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9V2h12v7"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg>
+                Imprimir / PDF
+            </button>
+        </div>
+    </div>
+
+    <!-- Cabecera -->
+    <header class="hero">
+        <div class="hero-inner">
+            <div class="hero-etiquetas">
+                <span class="etiqueta etiqueta-roja">Herramienta para comerciales</span>
+                <span class="etiqueta etiqueta-linea">Abrasivos desde 1970</span>
+            </div>
+            <h1>Calculadora de costes de pulido</h1>
+            <p>Comparativa de rendimiento y coste por pieza entre el disco cerámico estándar y el disco Albait PSG. Ajuste los parámetros con los datos reales del cliente y obtenga al instante el ahorro por pieza y su proyección anual.</p>
+            <p class="fecha-simulacion">Simulación del <span id="fechaSimulacion"></span> · Grupo Bolbaite — Industrial Bolbaite, S.L.</p>
+        </div>
+    </header>
+
+    <main class="layout">
+        <!-- Columna de parámetros -->
+        <aside class="columna-parametros">
+
+            <div class="tarjeta">
+                <h2 class="tarjeta-titulo">Coste laboral del operario</h2>
+                <div class="campo">
+                    <div class="etiqueta-campo">
+                        <span>Coste hora (con cargas sociales)</span>
+                        <span class="valor-campo" id="laborCostLabel">35,00 €/h</span>
+                    </div>
+                    <input type="range" id="laborCost" min="10" max="100" step="1" value="35" aria-label="Coste laboral por hora">
+                    <div class="pista"><span>10 €/h</span><span>100 €/h</span></div>
+                </div>
+            </div>
+
+            <div class="tarjeta">
+                <h2 class="tarjeta-titulo">Disco cerámico estándar</h2>
+                <div class="rejilla-numeros">
+                    <div class="campo-numero">
+                        <label for="stdPrice">Precio por disco</label>
+                        <div class="entrada">
+                            <input type="number" id="stdPrice" min="0.10" step="0.10" value="4.50" aria-label="Precio del disco estándar">
+                            <span class="unidad">€</span>
+                        </div>
+                    </div>
+                    <div class="campo-numero">
+                        <label for="stdTime">Tiempo por pieza</label>
+                        <div class="entrada">
+                            <input type="number" id="stdTime" min="0.1" step="0.1" value="4.0" aria-label="Tiempo de pulido por pieza con disco estándar">
+                            <span class="unidad">min</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="campo">
+                    <div class="etiqueta-campo">
+                        <span>Vida útil estimada</span>
+                        <span class="valor-neutro" id="stdLifeLabel">15 piezas</span>
+                    </div>
+                    <input type="range" id="stdLife" min="5" max="50" step="1" value="15" aria-label="Vida útil del disco estándar">
+                    <div class="pista"><span>5 pz</span><span>50 pz</span></div>
+                </div>
+            </div>
+
+            <div class="tarjeta tarjeta-destacada">
+                <h2 class="tarjeta-titulo">Disco Albait PSG</h2>
+                <div class="rejilla-numeros">
+                    <div class="campo-numero">
+                        <label for="albPrice">Precio por disco</label>
+                        <div class="entrada">
+                            <input type="number" id="albPrice" min="0.10" step="0.10" value="8.50" aria-label="Precio del disco Albait PSG">
+                            <span class="unidad">€</span>
+                        </div>
+                    </div>
+                    <div class="campo-numero">
+                        <label for="albTime">Tiempo por pieza</label>
+                        <div class="entrada">
+                            <input type="number" id="albTime" min="0.1" step="0.1" value="2.5" aria-label="Tiempo de pulido por pieza con disco Albait PSG">
+                            <span class="unidad">min</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="campo">
+                    <div class="etiqueta-campo">
+                        <span>Vida útil estimada</span>
+                        <span class="valor-campo" id="albLifeLabel">45 piezas</span>
+                    </div>
+                    <input type="range" id="albLife" min="10" max="100" step="1" value="45" aria-label="Vida útil del disco Albait PSG">
+                    <div class="pista"><span>10 pz</span><span>100 pz</span></div>
+                </div>
+                <p class="nota-discretiva">Fabricación propia Grupo Bolbaite: medidas, cosidos y combinaciones a medida.</p>
+            </div>
+
+            <div class="tarjeta">
+                <h2 class="tarjeta-titulo">Volumen de producción del cliente</h2>
+                <div class="campo">
+                    <div class="etiqueta-campo">
+                        <span>Piezas pulidas al mes</span>
+                        <span class="valor-campo" id="piecesLabel">500 pz/mes</span>
+                    </div>
+                    <input type="range" id="pieces" min="0" max="5000" step="50" value="500" aria-label="Piezas pulidas al mes">
+                    <div class="pista"><span>0</span><span>5.000</span></div>
+                </div>
+            </div>
+
+        </aside>
+
+        <!-- Columna de resultados -->
+        <section class="columna-resultados">
+
+            <!-- KPIs -->
+            <div class="rejilla-kpis">
+                <div class="kpi">
+                    <div class="kpi-nombre">Coste por pieza · Estándar</div>
+                    <div class="kpi-valor" id="kpiStd">—</div>
+                    <div class="kpi-detalle" id="kpiStdDetalle"></div>
+                </div>
+                <div class="kpi kpi-marca">
+                    <div class="kpi-nombre">Coste por pieza · Albait PSG</div>
+                    <div class="kpi-valor" id="kpiAlb">—</div>
+                    <div class="kpi-detalle" id="kpiAlbDetalle"></div>
+                </div>
+                <div class="kpi" id="kpiAhorro">
+                    <div class="kpi-nombre" id="kpiAhorroNombre">Ahorro por pieza</div>
+                    <div class="kpi-valor" id="kpiSave">—</div>
+                    <div class="kpi-detalle" id="kpiSaveDetalle"></div>
+                </div>
+                <div class="kpi" id="kpiPorcentaje">
+                    <div class="kpi-nombre">Reducción de coste</div>
+                    <div class="kpi-valor" id="kpiPct">—</div>
+                    <div class="kpi-detalle">sobre el coste actual por pieza</div>
+                </div>
+            </div>
+
+            <!-- Gráfico principal -->
+            <div class="tarjeta">
+                <h2 class="tarjeta-titulo">Coste total por pieza pulida</h2>
+                <div class="contenedor-grafico grafico-principal">
+                    <canvas id="costChart" aria-label="Gráfico de coste total por pieza"></canvas>
+                </div>
+            </div>
+
+            <!-- Resumen -->
+            <div class="resumen" id="resumen">
+                <p id="summaryText">Calculando…</p>
+            </div>
+
+            <!-- Proyección de volumen -->
+            <div class="tarjeta">
+                <h2 class="tarjeta-titulo">Proyección con el volumen del cliente</h2>
+                <div class="rejilla-volumen">
+                    <div class="metrica-volumen">
+                        <div class="nombre" id="nombreMes">Ahorro mensual</div>
+                        <div class="valor" id="volMes">—</div>
+                        <div class="detalle" id="volMesDetalle"></div>
+                    </div>
+                    <div class="metrica-volumen">
+                        <div class="nombre" id="nombreAno">Ahorro anual</div>
+                        <div class="valor" id="volAno">—</div>
+                        <div class="detalle">a 12 meses de ritmo constante</div>
+                    </div>
+                    <div class="metrica-volumen">
+                        <div class="nombre">Horas de operario liberadas</div>
+                        <div class="valor" id="volHoras">—</div>
+                        <div class="detalle" id="volJornadas"></div>
+                    </div>
+                </div>
+                <div class="contenedor-grafico grafico-volumen">
+                    <canvas id="volumeChart" aria-label="Gráfico de ahorro acumulado a 12 meses"></canvas>
+                </div>
+            </div>
+
+            <!-- Argumentario -->
+            <div class="tarjeta argumentario">
+                <h2 class="tarjeta-titulo">Argumentario de venta</h2>
+                <ul id="argumentos"></ul>
+            </div>
+
+            <!-- Metodología -->
+            <div class="tarjeta">
+                <details class="metodologia">
+                    <summary>Cómo se calcula</summary>
+                    <ul>
+                        <li>Coste de disco por pieza = <code>precio del disco ÷ vida útil</code></li>
+                        <li>Coste laboral por pieza = <code>tiempo de pulido × (coste hora ÷ 60)</code></li>
+                        <li>Coste total por pieza = suma de ambos conceptos</li>
+                        <li>La proyección anual multiplica el ahorro mensual por 12, sin incluir consumos auxiliares ni cambios de disco.</li>
+                    </ul>
+                </details>
+                <p class="aviso">Cifras orientativas basadas en parámetros estimados con el cliente. Los resultados reales dependen de la aplicación, el material y las condiciones de trabajo.</p>
+            </div>
+
+        </section>
+    </main>
+
+    <!-- Pie -->
+    <footer>
+        <div class="pie-inner">
+            <div class="pie-rejilla">
+                <div class="pie-seccion">
+                    <div class="pie-nombre">GRUPO BOLBAITE</div>
+                    <p class="pie-tagline">Fabricación, comercialización y distribución de artículos para el lijado, pulido, repulido y acabado de superficies. Fabricación propia y soluciones a medida.</p>
+                </div>
+                <div class="pie-seccion">
+                    <h3>Dirección</h3>
+                    <p>Partida de Las Eras S/N</p>
+                    <p>46822 Bolbaite (Valencia) — España</p>
+                </div>
+                <div class="pie-seccion">
+                    <h3>Contacto</h3>
+                    <a href="tel:+34962223111">Tlf: 962 223 111</a>
+                    <a href="tel:+34627906801">Tlf: 627 90 68 01</a>
+                    <a href="mailto:gestion@industrialbolbaite.es">gestion@industrialbolbaite.es</a>
+                    <a href="https://www.industrialbolbaite.es" target="_blank" rel="noopener">www.industrialbolbaite.es</a>
+                </div>
+            </div>
+            <div class="pie-legal">
+                <span>INDUSTRIAL BOLBAITE FÁBRICA DE ARTÍCULOS PARA EL PULIDO, S.L. · B96446646</span>
+                <span>Presencia comercial: España · Portugal · Túnez · Marruecos</span>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // ---------- Valores por defecto ----------
+        const POR_DEFECTO = {
+            laborCost: 35, stdPrice: 4.50, stdTime: 4.0, stdLife: 15,
+            albPrice: 8.50, albTime: 2.5, albLife: 45, pieces: 500
+        };
+
+        const CONTROLES = ['laborCost', 'stdPrice', 'stdTime', 'stdLife', 'albPrice', 'albTime', 'albLife', 'pieces'];
+        CONTROLES.forEach(id => document.getElementById(id).addEventListener('input', actualizar));
+
+        // ---------- Utilidades de formato (es-ES) ----------
+        function eur(n, decimales = 2) {
+            return n.toLocaleString('es-ES', { style: 'currency', currency: 'EUR', minimumFractionDigits: decimales, maximumFractionDigits: decimales });
+        }
+        function num(n, decimales = 0) {
+            return n.toLocaleString('es-ES', { minimumFractionDigits: decimales, maximumFractionDigits: decimales });
+        }
+
+        function leer(id, minimo) {
+            const v = parseFloat(document.getElementById(id).value);
+            return isNaN(v) || v < minimo ? minimo : v;
+        }
+
+        function restablecer() {
+            CONTROLES.forEach(id => document.getElementById(id).value = POR_DEFECTO[id]);
+            actualizar();
+        }
+
+        // ---------- Fecha de simulación ----------
+        document.getElementById('fechaSimulacion').textContent =
+            new Date().toLocaleDateString('es-ES', { day: '2-digit', month: 'long', year: 'numeric' });
+
+        // ---------- Gráficos ----------
+        const colorDisco = 'rgba(90, 87, 214, 0.9)';    // Índigo claro de marca
+        const bordeDisco = '#5a57d6';
+        const colorLabor = 'rgba(26, 24, 147, 0.92)';   // Índigo corporativo
+        const bordeLabor = '#1a1893';
+
+        const chartCoste = new Chart(document.getElementById('costChart'), {
+            type: 'bar',
+            data: {
+                labels: [],
+                datasets: [
+                    {
+                        label: 'Coste del disco por pieza',
+                        data: [],
+                        backgroundColor: colorDisco,
+                        borderColor: bordeDisco,
+                        borderWidth: 1,
+                        borderRadius: { bottomLeft: 5, bottomRight: 5 },
+                        barPercentage: 0.55
+                    },
+                    {
+                        label: 'Coste laboral por pieza',
+                        data: [],
+                        backgroundColor: colorLabor,
+                        borderColor: bordeLabor,
+                        borderWidth: 1,
+                        borderRadius: { topLeft: 5, topRight: 5 },
+                        barPercentage: 0.55
+                    }
+                ]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: { labels: { color: '#555351', font: { size: 12 }, usePointStyle: true, pointStyle: 'rectRounded' } },
+                    tooltip: {
+                        mode: 'index',
+                        intersect: false,
+                        callbacks: {
+                            label: ctx => ` ${ctx.dataset.label}: ${eur(ctx.parsed.y)}`,
+                            footer: items => 'Coste total: ' + eur(items.reduce((t, i) => t + i.parsed.y, 0))
+                        }
+                    }
+                },
+                scales: {
+                    x: {
+                        stacked: true,
+                        ticks: { color: '#555351', font: { size: 13, weight: '600' } },
+                        grid: { display: false }
+                    },
+                    y: {
+                        stacked: true,
+                        beginAtZero: true,
+                        ticks: { color: '#8c8c8c', callback: v => v + ' €' },
+                        grid: { color: '#ececf4' }
+                    }
+                }
+            }
+        });
+
+        const chartVolumen = new Chart(document.getElementById('volumeChart'), {
+            type: 'line',
+            data: {
+                labels: Array.from({ length: 12 }, (_, i) => 'Mes ' + (i + 1)),
+                datasets: [{
+                    label: 'Ahorro acumulado',
+                    data: [],
+                    fill: true,
+                    tension: 0.25,
+                    borderWidth: 2.5,
+                    pointRadius: 3,
+                    pointBackgroundColor: '#fff'
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: { display: false },
+                    tooltip: { callbacks: { label: ctx => ' Ahorro acumulado: ' + eur(ctx.parsed.y) } }
+                },
+                scales: {
+                    x: { ticks: { color: '#8c8c8c', font: { size: 10 } }, grid: { display: false } },
+                    y: {
+                        beginAtZero: true,
+                        ticks: { color: '#8c8c8c', callback: v => v.toLocaleString('es-ES', { maximumFractionDigits: 0 }) + ' €' },
+                        grid: { color: '#ececf4' }
+                    }
+                }
+            }
+        });
+
+        // ---------- Cálculo y repintado ----------
+        function actualizar() {
+            // 1. Leer parámetros (con mínimos de seguridad)
+            const laborCost = leer('laborCost', 1);
+            const stdPrice = leer('stdPrice', 0.01);
+            const stdTime  = leer('stdTime', 0.01);
+            const stdLife  = leer('stdLife', 1);
+            const albPrice = leer('albPrice', 0.01);
+            const albTime  = leer('albTime', 0.01);
+            const albLife  = leer('albLife', 1);
+            const pieces   = leer('pieces', 0);
+
+            // 2. Etiquetas de los controles
+            document.getElementById('laborCostLabel').textContent = num(laborCost) + ' €/h';
+            document.getElementById('stdLifeLabel').textContent = num(stdLife) + ' piezas';
+            document.getElementById('albLifeLabel').textContent = num(albLife) + ' piezas';
+            document.getElementById('piecesLabel').textContent = num(pieces) + ' pz/mes';
+
+            // 3. Costes por pieza
+            const stdDisc  = stdPrice / stdLife;
+            const stdLabor = stdTime * (laborCost / 60);
+            const stdTotal = stdDisc + stdLabor;
+
+            const albDisc  = albPrice / albLife;
+            const albLabor = albTime * (laborCost / 60);
+            const albTotal = albDisc + albLabor;
+
+            const ahorro = stdTotal - albTotal;       // > 0 => gana Albait PSG
+            const pct = stdTotal > 0 ? (ahorro / stdTotal) * 100 : 0;
+
+            // 4. KPIs
+            document.getElementById('kpiStd').textContent = eur(stdTotal);
+            document.getElementById('kpiStdDetalle').textContent = `disco ${eur(stdDisc)} + mano de obra ${eur(stdLabor)}`;
+            document.getElementById('kpiAlb').textContent = eur(albTotal);
+            document.getElementById('kpiAlbDetalle').textContent = `disco ${eur(albDisc)} + mano de obra ${eur(albLabor)}`;
+
+            const kpiAhorro = document.getElementById('kpiAhorro');
+            const kpiPct = document.getElementById('kpiPorcentaje');
+            kpiAhorro.classList.toggle('kpi-positivo', ahorro > 0.0001);
+            kpiAhorro.classList.toggle('kpi-negativo', ahorro < -0.0001);
+            kpiPct.classList.toggle('kpi-positivo', ahorro > 0.0001);
+            kpiPct.classList.toggle('kpi-negativo', ahorro < -0.0001);
+            document.getElementById('kpiAhorroNombre').textContent = ahorro >= -0.0001 ? 'Ahorro por pieza' : 'Sobrecoste por pieza';
+            document.getElementById('kpiSave').textContent = eur(Math.abs(ahorro));
+            document.getElementById('kpiSaveDetalle').textContent = 'con Albait PSG frente al estándar';
+            document.getElementById('kpiPct').textContent = (ahorro >= 0 ? '−' : '+') + num(Math.abs(pct), 1) + ' %';
+
+            // 5. Gráfico de coste por pieza (ordenado de mayor a menor)
+            const comparativa = [
+                { nombre: 'Disco cerámico estándar', disco: stdDisc, labor: stdLabor, total: stdTotal },
+                { nombre: 'Disco Albait PSG', disco: albDisc, labor: albLabor, total: albTotal }
+            ].sort((a, b) => b.total - a.total);
+
+            chartCoste.data.labels = comparativa.map(d => d.nombre);
+            chartCoste.data.datasets[0].data = comparativa.map(d => d.disco);
+            chartCoste.data.datasets[1].data = comparativa.map(d => d.labor);
+            chartCoste.update();
+
+            // 6. Resumen
+            const resumen = document.getElementById('resumen');
+            resumen.classList.toggle('resumen-negativa', ahorro < -0.0001);
+            let resumenHTML;
+            if (ahorro > 0.0001) {
+                resumenHTML = `Con el <strong>disco Albait PSG</strong> el cliente abarata cada pieza pulida: <span class="cifra">${eur(ahorro)}</span> menos por pieza (${num(pct, 1)} % de reducción), gracias a mayor vida útil y menor tiempo de proceso.`;
+            } else if (ahorro < -0.0001) {
+                resumenHTML = `Con estos parámetros, el disco <span class="cifra-negra">cerámico estándar</span> sale ${eur(-ahorro)} más barato por pieza. Ajuste vida útil o tiempos con datos de la prueba real antes de cerrar la propuesta.`;
+            } else {
+                resumenHTML = `Con estos parámetros, el coste por pieza es <strong>idéntico</strong> para ambos discos.`;
+            }
+            document.getElementById('summaryText').innerHTML = resumenHTML;
+
+            // 7. Proyección de volumen
+            const ahorroMes = ahorro * pieces;
+            const ahorroAno = ahorroMes * 12;
+            const horasLiberadas = ((stdTime - albTime) * pieces) / 60;
+            const jornadas = horasLiberadas / 8;
+
+            const positivo = ahorro > 0.0001;
+            document.getElementById('nombreMes').textContent = positivo ? 'Ahorro mensual' : 'Sobrecoste mensual';
+            document.getElementById('nombreAno').textContent = positivo ? 'Ahorro anual' : 'Sobrecoste anual';
+            const volMes = document.getElementById('volMes');
+            const volAno = document.getElementById('volAno');
+            volMes.textContent = eur(Math.abs(ahorroMes));
+            volAno.textContent = eur(Math.abs(ahorroAno), ahorroAno !== 0 && Math.abs(ahorroAno) < 100 ? 2 : 0);
+            volMes.className = 'valor ' + (positivo ? 'positivo' : 'negativo');
+            volAno.className = 'valor ' + (positivo ? 'positivo' : 'negativo');
+            document.getElementById('volMesDetalle').textContent = pieces > 0
+                ? `${num(pieces)} piezas/mes × ${eur(Math.abs(ahorro))} por pieza`
+                : 'Indique el volumen mensual del cliente';
+
+            const volHoras = document.getElementById('volHoras');
+            volHoras.textContent = num(Math.abs(horasLiberadas), 1) + ' h/mes';
+            volHoras.className = 'valor ' + (horasLiberadas >= 0 ? 'positivo' : 'negativo');
+            document.getElementById('volJornadas').textContent = horasLiberadas >= 0
+                ? `equivalente a ${num(jornadas, 1)} jornadas de 8 h`
+                : `tiempo adicional de proceso respecto al estándar`;
+
+            // 8. Gráfico de ahorro acumulado
+            const colorLinea = ahorro >= 0 ? '#1e8e3e' : '#a70013';
+            const ds = chartVolumen.data.datasets[0];
+            ds.data = Array.from({ length: 12 }, (_, i) => ahorroMes * (i + 1));
+            ds.borderColor = colorLinea;
+            ds.backgroundColor = ahorro >= 0 ? 'rgba(30, 142, 62, 0.08)' : 'rgba(167, 0, 19, 0.08)';
+            ds.pointBorderColor = colorLinea;
+            chartVolumen.update();
+
+            // 9. Argumentario dinámico
+            const argumentos = [];
+            const ratioVida = albLife / stdLife;
+            if (ratioVida > 1.05) argumentos.push(`El disco Albait PSG dura <strong>${num(ratioVida, 1)} veces más</strong> que el disco cerámico estándar (${num(albLife)} frente a ${num(stdLife)} piezas por disco).`);
+            if (stdTime - albTime > 0.05) {
+                const reduccionTiempo = (1 - albTime / stdTime) * 100;
+                argumentos.push(`Reduce el tiempo de pulido un <strong>${num(reduccionTiempo, 0)} %</strong>: ${num(stdTime - albTime, 1)} minutos menos por pieza.`);
+            }
+            if (ahorro > 0.0001) argumentos.push(`Cada pieza sale <strong>${eur(ahorro)} más barata</strong> (${num(pct, 1)} % de reducción del coste unitario), aunque el disco cueste más al inicio.`);
+            if (pieces > 0 && ahorro > 0.0001) argumentos.push(`Con su volumen de ${num(pieces)} piezas/mes, el cliente ahorra <strong>${eur(ahorroMes)}/mes</strong> y <strong>${eur(ahorroAno)}</strong> al año.`);
+            if (horasLiberadas > 0.5) argumentos.push(`Se liberan <strong>${num(horasLiberadas, 1)} horas de operario al mes</strong> (${num(jornadas, 1)} jornadas), reconvertibles en más producción sin contratar.`);
+            argumentos.push(`Menos cambios de disco: <strong>${num(Math.ceil(pieces / albLife))} discos PSG al mes</strong> frente a ${num(Math.ceil(pieces / stdLife))} discos estándar, menos paros de máquina y menos logística.`);
+            argumentos.push(`Fabricación propia de <strong>Grupo Bolbaite</strong> desde 1970: medidas especiales, tipos de cosido y combinaciones de materiales <strong>a medida del cliente</strong>.`);
+
+            document.getElementById('argumentos').innerHTML = argumentos
+                .map(t => `<li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg><span>${t}</span></li>`)
+                .join('');
+        }
+
+        actualizar();
+    </script>
+</body>
+</html>

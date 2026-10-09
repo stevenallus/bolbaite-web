@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Calculadora de Costes de Pulido</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        /* Estilos personalizados adicionales para inputs de rango en modo oscuro */
+        input[type=range] {
+            -webkit-appearance: none;
+            width: 100%;
+            background: transparent;
+        }
+        input[type=range]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            height: 20px;
+            width: 20px;
+            border-radius: 50%;
+            background: #3b82f6;
+            cursor: pointer;
+            margin-top: -6px;
+            box-shadow: 0 0 10px rgba(59, 130, 246, 0.5);
+        }
+        input[type=range]::-webkit-slider-runnable-track {
+            width: 100%;
+            height: 8px;
+            cursor: pointer;
+            background: #374151;
+            border-radius: 4px;
+        }
+        input[type=range]:focus {
+            outline: none;
+        }
+    </style>
+</head>
+<body class="bg-gray-900 text-gray-100 min-h-screen font-sans">
+    
+    <div class="max-w-6xl mx-auto p-4 md:p-8">
+        <header class="mb-8 border-b border-gray-700 pb-4">
+            <h1 class="text-3xl font-bold text-blue-400">Calculadora de Costes de Pulido</h1>
+            <p class="text-gray-400 mt-2">Comparativa de rendimiento: Disco Cerámico Estándar vs Disco Albait (PSG)</p>
+        </header>
+
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
+            
+            <div class="lg:col-span-4 space-y-6">
+                <!-- Tarjeta: Coste Laboral -->
+                <div class="bg-gray-800 p-6 rounded-xl shadow-lg border border-gray-700">
+                    <h2 class="text-xl font-semibold mb-4 text-white flex justify-between items-center">
+                        Coste Laboral
+                        <span id="laborCostLabel" class="text-blue-400 font-bold bg-blue-900/30 px-3 py-1 rounded-full text-sm">35 €/h</span>
+                    </h2>
+                    <input type="range" id="laborCost" min="10" max="100" step="1" value="35" class="w-full" oninput="updateChart()">
+                    <div class="flex justify-between text-xs text-gray-500 mt-2">
+                        <span>10 €/h</span>
+                        <span>100 €/h</span>
+                    </div>
+                </div>
+
+                <!-- Tarjeta: Disco Estándar -->
+                <div class="bg-gray-800 p-6 rounded-xl shadow-lg border border-gray-700">
+                    <h2 class="text-lg font-semibold mb-2 text-gray-300">Disco Cerámico Estándar</h2>
+                    <div class="grid grid-cols-2 gap-4 text-sm mb-4 text-gray-400 bg-gray-900/50 p-3 rounded-lg">
+                        <div>Precio: <span class="text-white font-medium">4.50 €</span></div>
+                        <div>Tiempo: <span class="text-white font-medium">4 min/pz</span></div>
+                    </div>
+                    <label class="block text-sm mb-2 flex justify-between">
+                        Vida Útil Estimada: 
+                        <span id="stdLifeLabel" class="text-white font-medium">15 piezas</span>
+                    </label>
+                    <input type="range" id="stdLife" min="5" max="50" step="1" value="15" class="w-full" oninput="updateChart()">
+                </div>
+
+                <!-- Tarjeta: Disco Albait -->
+                <div class="bg-gray-800 p-6 rounded-xl shadow-lg border border-gray-700 border-l-4 border-l-blue-500">
+                    <h2 class="text-lg font-semibold mb-2 text-white">Disco Albait (PSG)</h2>
+                    <div class="grid grid-cols-2 gap-4 text-sm mb-4 text-gray-400 bg-gray-900/50 p-3 rounded-lg">
+                        <div>Precio: <span class="text-white font-medium">8.50 €</span></div>
+                        <div>Tiempo: <span class="text-white font-medium">2.5 min/pz</span></div>
+                    </div>
+                    <label class="block text-sm mb-2 flex justify-between">
+                        Vida Útil Estimada: 
+                        <span id="albaitLifeLabel" class="text-blue-400 font-medium">45 piezas</span>
+                    </label>
+                    <input type="range" id="albaitLife" min="10" max="100" step="1" value="45" class="w-full" oninput="updateChart()">
+                </div>
+            </div>
+
+            <div class="lg:col-span-8 flex flex-col space-y-6">
+                <!-- Contenedor del Gráfico -->
+                <div class="bg-gray-800 p-6 rounded-xl shadow-lg border border-gray-700 flex-grow relative">
+                    <h2 class="text-xl font-semibold mb-6 text-white">Coste Total por Pieza Pulida</h2>
+                    <div class="relative h-80 w-full">
+                        <canvas id="costChart"></canvas>
+                    </div>
+                </div>
+
+                <!-- Tarjeta de Resumen -->
+                <div class="bg-blue-900/20 border border-blue-500/30 p-6 rounded-xl shadow-lg text-center">
+                    <p id="summaryText" class="text-lg text-gray-300">
+                        Cargando resumen...
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Constantes estáticas del problema
+        const stdPrice = 4.50;
+        const stdTime = 4.0; // minutos por pieza
+        const albaitPrice = 8.50;
+        const albaitTime = 2.5; // minutos por pieza
+
+        // Configuración inicial de Chart.js
+        const ctx = document.getElementById('costChart').getContext('2d');
+        
+        // Colores en tonos azules para el gráfico apilado
+        const colorDisc = 'rgba(96, 165, 250, 0.85)'; // Azul claro (Tailwind blue-400)
+        const borderDisc = 'rgba(96, 165, 250, 1)';
+        
+        const colorLabor = 'rgba(37, 99, 235, 0.85)'; // Azul oscuro/brillante (Tailwind blue-600)
+        const borderLabor = 'rgba(37, 99, 235, 1)';
+
+        // Instancia del gráfico
+        let myChart = new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: [], // Se rellenará dinámicamente para mantener el orden
+                datasets: [
+                    {
+                        label: 'Coste del Disco por Pieza (€)',
+                        data: [],
+                        backgroundColor: colorDisc,
+                        borderColor: borderDisc,
+                        borderWidth: 1,
+                        barPercentage: 0.6,
+                        borderRadius: {bottomLeft: 4, bottomRight: 4, topLeft: 0, topRight: 0}
+                    },
+                    {
+                        label: 'Coste Laboral por Pieza (€)',
+                        data: [],
+                        backgroundColor: colorLabor,
+                        borderColor: borderLabor,
+                        borderWidth: 1,
+                        barPercentage: 0.6,
+                        borderRadius: {topLeft: 4, topRight: 4, bottomLeft: 0, bottomRight: 0}
+                    }
+                ]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        labels: {
+                            color: '#e5e7eb', // text-gray-200
+                            font: { size: 13, family: 'sans-serif' }
+                        }
+                    },
+                    tooltip: {
+                        mode: 'index',
+                        intersect: false,
+                        callbacks: {
+                            label: function(context) {
+                                let label = context.dataset.label || '';
+                                if (label) { label += ': '; }
+                                if (context.parsed.y !== null) {
+                                    label += context.parsed.y.toFixed(2) + ' €';
+                                }
+                                return label;
+                            },
+                            footer: function(tooltipItems) {
+                                let total = 0;
+                                tooltipItems.forEach(function(tooltipItem) {
+                                    total += tooltipItem.parsed.y;
+                                });
+                                return 'Coste Total: ' + total.toFixed(2) + ' €';
+                            }
+                        }
+                    }
+                },
+                scales: {
+                    x: {
+                        stacked: true,
+                        ticks: { color: '#9ca3af', font: { size: 14 } },
+                        grid: { color: 'rgba(75, 85, 99, 0.2)' } // text-gray-400 y líneas tenues
+                    },
+                    y: {
+                        stacked: true,
+                        beginAtZero: true,
+                        ticks: {
+                            color: '#9ca3af',
+                            callback: function(value) { return value + ' €'; }
+                        },
+                        grid: { color: 'rgba(75, 85, 99, 0.2)' }
+                    }
+                }
+            }
+        });
+
+        function updateChart() {
+            // 1. Obtener valores de los sliders
+            const laborCost = parseFloat(document.getElementById('laborCost').value);
+            const stdLife = parseFloat(document.getElementById('stdLife').value);
+            const albaitLife = parseFloat(document.getElementById('albaitLife').value);
+
+            // 2. Actualizar las etiquetas visuales de la interfaz
+            document.getElementById('laborCostLabel').innerText = laborCost + ' €/h';
+            document.getElementById('stdLifeLabel').innerText = stdLife + ' piezas';
+            document.getElementById('albaitLifeLabel').innerText = albaitLife + ' piezas';
+
+            // 3. Realizar los cálculos usando las fórmulas indicadas
+            
+            // Estándar
+            const stdDiscCostPerPiece = stdPrice / stdLife;
+            const stdLaborCostPerPiece = stdTime * (laborCost / 60);
+            const stdTotalCost = stdDiscCostPerPiece + stdLaborCostPerPiece;
+
+            // Albait
+            const albaitDiscCostPerPiece = albaitPrice / albaitLife;
+            const albaitLaborCostPerPiece = albaitTime * (laborCost / 60);
+            const albaitTotalCost = albaitDiscCostPerPiece + albaitLaborCostPerPiece;
+
+            // 4. Crear estructura de datos para ordenar de mayor a menor total
+            let compareData = [
+                {
+                    name: 'Cerámico Estándar',
+                    discCost: stdDiscCostPerPiece,
+                    laborCost: stdLaborCostPerPiece,
+                    total: stdTotalCost
+                },
+                {
+                    name: 'Disco Albait (PSG)',
+                    discCost: albaitDiscCostPerPiece,
+                    laborCost: albaitLaborCostPerPiece,
+                    total: albaitTotalCost
+                }
+            ];
+
+            // Ordenar de mayor a menor coste total (Descending)
+            compareData.sort((a, b) => b.total - a.total);
+
+            // 5. Inyectar datos ordenados en el gráfico
+            myChart.data.labels = [compareData[0].name, compareData[1].name];
+            
+            // Dataset 0: Coste de Disco
+            myChart.data.datasets[0].data = [compareData[0].discCost, compareData[1].discCost];
+            // Dataset 1: Coste Laboral
+            myChart.data.datasets[1].data = [compareData[0].laborCost, compareData[1].laborCost];
+            
+            myChart.update();
+
+            // 6. Actualizar cuadro de resumen
+            const diff = Math.abs(stdTotalCost - albaitTotalCost);
+            let summaryHTML = "";
+            
+            if (albaitTotalCost < stdTotalCost) {
+                summaryHTML = `Al utilizar el <span class="text-blue-400 font-bold">Disco Albait</span> el coste total se reduce gracias al enorme ahorro de tiempo, ahorrando <span class="text-green-400 font-bold text-2xl ml-1">${diff.toFixed(2)} €</span> por pieza pulida.`;
+            } else if (stdTotalCost < albaitTotalCost) {
+                summaryHTML = `Bajo esta configuración, el <span class="text-white font-bold">Cerámico Estándar</span> es más rentable, ahorrando <span class="text-green-400 font-bold text-2xl ml-1">${diff.toFixed(2)} €</span> por pieza pulida.`;
+            } else {
+                summaryHTML = `Bajo esta configuración, el coste por pieza es <span class="text-blue-300 font-bold text-xl">idéntico</span> para ambos discos.`;
+            }
+
+            document.getElementById('summaryText').innerHTML = summaryHTML;
+        }
+
+        // Llamada inicial para renderizar con los valores por defecto
+        updateChart();
+    </script>
+</body>
+</html>
