@@ -1,0 +1,575 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Grupo Bolbaite — Abrasivos desde 1970 | Industrial Bolbaite, S.L.</title>
+<meta name="description" content="Grupo Bolbaite: fabricación propia y distribución oficial de abrasivos 3M, sia, Klingspor y Fein. Discos de corte y pulido desde 1970. Servicio, calidad y cercanía.">
+<link rel="icon" type="image/png" href="assets/img/logo-marca-bolbaite.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Arimo:ital,wght@0,400;0,500;0,600;0,700;1,400&display=swap" rel="stylesheet">
+<style>
+/* ============================================================
+   GRUPO BOLBAITE — Maqueta web
+   Colores de marca: azul #1a1893 · gris #555351 · rojo #a70013
+   ============================================================ */
+:root{
+  --azul:#1a1893;
+  --azul-oscuro:#12117a;
+  --azul-suave:#efeffa;
+  --rojo:#a70013;
+  --gris:#555351;
+  --gris-claro:#8c8c8c;
+  --gris-fondo:#f4f4f4;
+  --blanco:#ffffff;
+  --radio:6px;
+  --sombra:0 6px 24px rgba(26,24,147,.10);
+  --sombra-fuerte:0 12px 32px rgba(26,24,147,.18);
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+html{scroll-behavior:smooth;}
+body{
+  font-family:'Arimo',Arial,Helvetica,sans-serif;
+  color:var(--gris);
+  background:var(--blanco);
+  line-height:1.6;
+}
+img{max-width:100%;display:block;}
+a{text-decoration:none;color:inherit;}
+.container{width:min(1180px,92%);margin:0 auto;}
+
+/* ---------- Cabecera (mantener actual) ---------- */
+.topbar{
+  background:var(--azul);
+  color:#c9c8ee;
+  font-size:.8rem;
+  padding:.45rem 0;
+}
+.topbar .container{display:flex;justify-content:center;gap:1.6rem;flex-wrap:wrap;text-align:center;}
+.topbar a{display:inline-flex;align-items:center;gap:.4rem;transition:color .2s;}
+.topbar a:hover{color:#fff;}
+.topbar svg{width:13px;height:13px;flex:none;}
+header.cabecera{
+  background:var(--blanco);
+  border-bottom:1px solid #e8e8e8;
+  position:sticky;top:0;z-index:1000;
+}
+.cabecera-inner{
+  display:flex;align-items:center;justify-content:space-between;
+  padding:.9rem 0;gap:1rem;flex-wrap:wrap;
+}
+.marca{display:flex;align-items:center;gap:1rem;}
+.marca img{height:52px;width:auto;}
+.marca-texto{display:flex;flex-direction:column;line-height:1.15;}
+.marca-texto strong{
+  font-size:1.35rem;font-weight:800;letter-spacing:.02em;
+  color:var(--azul);white-space:nowrap;
+}
+.marca-texto small{
+  font-size:.68rem;font-weight:600;letter-spacing:.14em;
+  text-transform:uppercase;color:var(--azul-oscuro);white-space:nowrap;
+}
+.pie-marca{display:flex;align-items:center;gap:.9rem;margin-bottom:1rem;}
+.pie-logo-chip{
+  display:inline-flex;align-items:center;background:#fff;
+  border-radius:10px;padding:.45rem .6rem;
+}
+.pie-logo-chip img{height:44px;width:auto;display:block;}
+.pie-marca-texto{display:flex;flex-direction:column;line-height:1.15;}
+.pie-marca-texto strong{
+  font-size:1.15rem;font-weight:800;letter-spacing:.02em;color:#fff;white-space:nowrap;
+}
+.pie-marca-texto small{
+  font-size:.62rem;font-weight:600;letter-spacing:.14em;
+  text-transform:uppercase;color:#c9c8ee;white-space:nowrap;
+}
+.burger{
+  display:none;background:none;border:1.5px solid var(--azul);
+  border-radius:var(--radio);padding:.45rem .6rem;cursor:pointer;
+}
+.burger svg{width:22px;height:22px;stroke:var(--azul);}
+/* ---------- Navegación (en la barra blanca, junto al logo) ---------- */
+.nav-principal ul{list-style:none;display:flex;gap:.3rem;}
+.nav-principal a{
+  display:block;color:var(--azul);font-size:.83rem;font-weight:700;
+  letter-spacing:.09em;text-transform:uppercase;
+  padding:.65rem 1.15rem;border-radius:var(--radio);
+  transition:background .2s,color .2s;
+}
+.nav-principal a:hover,
+.nav-principal a.activo{background:var(--azul);color:#fff;}
+
+/* ---------- Botones ---------- */
+.btn{
+  display:inline-flex;align-items:center;justify-content:center;gap:.55rem;
+  font-family:inherit;font-size:.85rem;font-weight:700;
+  letter-spacing:.09em;text-transform:uppercase;
+  padding:.95rem 2.1rem;border-radius:var(--radio);
+  border:2px solid transparent;cursor:pointer;
+  transition:all .22s ease;
+}
+.btn svg{width:15px;height:15px;flex:none;}
+.btn-azul{background:var(--azul);color:#fff;}
+.btn-azul:hover{background:var(--azul-oscuro);transform:translateY(-2px);box-shadow:var(--sombra-fuerte);}
+.btn-blanco{background:#fff;color:var(--azul);}
+.btn-blanco:hover{background:var(--azul);color:#fff;transform:translateY(-2px);}
+.btn-outline{background:transparent;color:var(--azul);border-color:var(--azul);}
+.btn-outline:hover{background:var(--azul);color:#fff;transform:translateY(-2px);}
+.btn-rojo{background:var(--rojo);color:#fff;}
+.btn-rojo:hover{background:#8a000f;transform:translateY(-2px);box-shadow:0 12px 32px rgba(167,0,19,.25);}
+
+/* ---------- Hero con vídeo (estilo Polidisc) ---------- */
+.hero{
+  position:relative;min-height:78vh;
+  display:flex;align-items:center;justify-content:center;
+  overflow:hidden;background:#0c0b1e;
+}
+.hero video{
+  position:absolute;inset:0;width:100%;height:100%;
+  object-fit:cover;z-index:0;
+}
+.hero .capa{
+  position:absolute;inset:0;z-index:1;
+  background:linear-gradient(180deg,rgba(12,11,30,.72) 0%,rgba(26,24,147,.45) 55%,rgba(12,11,30,.82) 100%);
+}
+.hero-contenido{
+  position:relative;z-index:2;text-align:center;color:#fff;
+  padding:6rem 1rem;
+}
+.hero-contenido h1{
+  font-size:clamp(2.2rem,5.5vw,4.2rem);
+  font-weight:700;letter-spacing:.14em;text-transform:uppercase;
+  text-shadow:0 4px 26px rgba(0,0,0,.55);
+}
+.hero-contenido .separador{
+  width:88px;height:4px;background:#fff;
+  margin:1.3rem auto;border-radius:2px;
+}
+.hero-contenido p{
+  font-size:clamp(.95rem,1.8vw,1.3rem);
+  letter-spacing:.42em;text-transform:uppercase;font-weight:600;
+  color:#e6e6ff;text-shadow:0 2px 14px rgba(0,0,0,.6);
+}
+.hero-contenido .btn{margin-top:2.4rem;}
+.flecha-scroll{
+  position:absolute;bottom:1.6rem;left:50%;transform:translateX(-50%);
+  z-index:2;color:#fff;opacity:.85;animation:rebote 2s infinite;
+}
+.flecha-scroll svg{width:26px;height:26px;}
+@keyframes rebote{0%,100%{transform:translate(-50%,0);}50%{transform:translate(-50%,9px);}}
+
+/* ---------- Secciones genéricas ---------- */
+section.bloque{padding:5.2rem 0;}
+section.bloque.fondo-gris{background:var(--gris-fondo);}
+.encabezado-seccion{text-align:center;max-width:760px;margin:0 auto 3.2rem;}
+.encabezado-seccion .etiqueta{
+  display:inline-block;background:var(--azul);color:#fff;
+  font-size:.7rem;font-weight:700;letter-spacing:.22em;text-transform:uppercase;
+  padding:.38rem 1.1rem;border-radius:99px;margin-bottom:1.1rem;
+}
+.encabezado-seccion h2{
+  color:var(--azul);font-size:clamp(1.55rem,3vw,2.3rem);
+  font-weight:700;line-height:1.25;
+}
+.encabezado-seccion p{margin-top:.9rem;font-size:1.02rem;}
+
+/* ---------- Fabricación propia ---------- */
+.fabricacion{
+  display:grid;grid-template-columns:1.05fr 1fr;gap:3.6rem;align-items:center;
+}
+.fabricacion h2{
+  color:var(--azul);font-size:clamp(1.6rem,3vw,2.35rem);
+  font-weight:700;line-height:1.28;
+}
+.fabricacion h2 em{font-style:normal;color:var(--rojo);}
+.fabricacion > div > p{margin:1.2rem 0 1.6rem;font-size:1.02rem;}
+.lista-check{list-style:none;margin-bottom:2rem;}
+.lista-check li{
+  display:flex;gap:.7rem;align-items:flex-start;
+  padding:.32rem 0;font-size:.97rem;
+}
+.lista-check svg{
+  width:19px;height:19px;flex:none;margin-top:.22rem;
+  color:var(--azul);
+}
+.acciones{display:flex;gap:.9rem;flex-wrap:wrap;}
+.discos{
+  display:grid;grid-template-columns:1fr;justify-items:center;
+}
+.logo-albait{
+  display:flex;align-items:center;gap:1.4rem;
+  background:#fff;border-radius:var(--radio);
+  box-shadow:var(--sombra);padding:2.8rem 4rem;
+  transition:transform .25s,box-shadow .25s;
+}
+.logo-albait:hover{transform:translateY(-6px);box-shadow:var(--sombra-fuerte);}
+.logo-albait span{
+  font-size:clamp(2.4rem,5vw,3.6rem);font-weight:800;
+  font-style:italic;letter-spacing:.08em;color:var(--azul-oscuro);
+  line-height:1;
+}
+.logo-albait-sep{
+  width:2px;height:64px;background:#e3e3ef;border-radius:2px;
+}
+.logo-albait img{height:74px;width:auto;}
+
+/* ---------- Marcas / distribuidor oficial ---------- */
+.grid-marcas{
+  display:grid;grid-template-columns:repeat(4,1fr);gap:1.4rem;
+}
+.marca-card{
+  background:#fff;border-radius:var(--radio);
+  border:1px solid #e6e6f2;
+  box-shadow:var(--sombra);
+  padding:2.2rem 1.4rem;text-align:center;
+  display:flex;flex-direction:column;justify-content:center;align-items:center;
+  min-height:190px;
+  transition:transform .25s,box-shadow .25s,border-color .25s;
+}
+.marca-card:hover{
+  transform:translateY(-6px);box-shadow:var(--sombra-fuerte);
+  border-color:var(--azul);
+}
+.marca-card img{max-height:78px;width:auto;object-fit:contain;}
+.klingspor-logo{
+  display:flex;align-items:center;gap:.55rem;
+}
+.klingspor-logo img{height:64px;width:auto;}
+.klingspor-logo b{
+  font-size:1.28rem;font-weight:700;letter-spacing:.03em;color:#1d1d1b;
+}
+.nota-marcas{
+  text-align:center;margin-top:2.2rem;
+}
+.nota-marcas p{font-size:.92rem;color:var(--gris-claro);margin-bottom:1.3rem;}
+
+/* ---------- Valores / por qué nosotros ---------- */
+.grid-valores{
+  display:grid;grid-template-columns:repeat(3,1fr);gap:1.6rem;
+}
+.valor-card{
+  background:#fff;border-radius:var(--radio);
+  border-top:4px solid var(--azul);
+  box-shadow:var(--sombra);
+  padding:2.3rem 1.8rem;
+  transition:transform .25s,box-shadow .25s;
+}
+.valor-card:hover{transform:translateY(-6px);box-shadow:var(--sombra-fuerte);}
+.icono-circulo{
+  width:58px;height:58px;border-radius:50%;
+  background:var(--azul-suave);color:var(--azul);
+  display:flex;align-items:center;justify-content:center;
+  margin-bottom:1.2rem;
+}
+.icono-circulo svg{width:26px;height:26px;}
+.valor-card h3{
+  color:var(--azul);font-size:1.05rem;font-weight:700;
+  margin-bottom:.6rem;letter-spacing:.02em;
+}
+.valor-card p{font-size:.93rem;}
+.centro-acciones{text-align:center;margin-top:2.8rem;}
+
+/* ---------- Cita / lema ---------- */
+section.lema{
+  background:linear-gradient(120deg,var(--azul) 0%,var(--azul-oscuro) 100%);
+  color:#fff;text-align:center;padding:4.4rem 0;
+}
+section.lema blockquote{
+  font-size:clamp(1.3rem,2.6vw,1.9rem);font-weight:600;
+  letter-spacing:.06em;max-width:820px;margin:0 auto 2.2rem;
+}
+section.lema cite{
+  display:block;font-style:normal;font-size:.8rem;
+  letter-spacing:.24em;text-transform:uppercase;color:#c9c8ee;
+  margin-bottom:2.4rem;
+}
+
+/* ---------- Contacto ---------- */
+.contacto-grid{
+  display:grid;grid-template-columns:1fr 1.15fr;gap:3rem;align-items:start;
+}
+.info-contacto h2{
+  color:var(--azul);font-size:clamp(1.5rem,2.6vw,2.1rem);
+  font-weight:700;margin-bottom:1rem;
+}
+.info-contacto > p{margin-bottom:2rem;font-size:1rem;}
+.dato-contacto{
+  display:flex;gap:1rem;align-items:flex-start;padding:.9rem 0;
+  border-bottom:1px solid #e4e4ef;
+}
+.dato-contacto:last-of-type{border-bottom:none;}
+.dato-contacto .icono-circulo{width:46px;height:46px;margin:0;flex:none;}
+.dato-contacto .icono-circulo svg{width:20px;height:20px;}
+.dato-contacto b{
+  display:block;color:var(--azul);font-size:.78rem;font-weight:700;
+  letter-spacing:.12em;text-transform:uppercase;
+}
+.dato-contacto a,.dato-contacto span.val{font-size:.98rem;color:var(--gris);}
+.dato-contacto a:hover{color:var(--azul);text-decoration:underline;}
+.form-contacto{
+  background:#fff;border-radius:var(--radio);
+  box-shadow:var(--sombra);padding:2.4rem;
+  border-top:4px solid var(--azul);
+}
+.form-contacto h3{
+  color:var(--azul);font-size:1.15rem;font-weight:700;margin-bottom:1.4rem;
+}
+.campo{margin-bottom:1.1rem;}
+.campo label{
+  display:block;font-size:.74rem;font-weight:700;
+  letter-spacing:.1em;text-transform:uppercase;color:var(--gris);
+  margin-bottom:.35rem;
+}
+.campo input,.campo select,.campo textarea{
+  width:100%;font-family:inherit;font-size:.95rem;color:var(--gris);
+  padding:.75rem .9rem;border:1.5px solid #d8d8e8;border-radius:var(--radio);
+  background:#fbfbfe;transition:border-color .2s;
+}
+.campo input:focus,.campo select:focus,.campo textarea:focus{
+  outline:none;border-color:var(--azul);background:#fff;
+}
+.campo textarea{resize:vertical;min-height:120px;}
+.campos-dobles{display:grid;grid-template-columns:1fr 1fr;gap:1.1rem;}
+.form-contacto .btn{width:100%;margin-top:.4rem;}
+.aviso-form{
+  font-size:.75rem;color:var(--gris-claro);text-align:center;margin-top:.9rem;
+}
+
+/* ---------- Pie ---------- */
+footer.pie{background:var(--azul);color:#fff;}
+.pie-superior{
+  display:grid;grid-template-columns:1.3fr 1fr 1fr;gap:2.5rem;
+  padding:3.2rem 0;
+}
+.pie-superior p{font-size:.88rem;color:#c9c8ee;max-width:320px;}
+.pie-col h4{
+  font-size:.78rem;font-weight:700;letter-spacing:.18em;
+  text-transform:uppercase;margin-bottom:1.1rem;color:#fff;
+}
+.pie-col ul{list-style:none;}
+.pie-col li{margin-bottom:.55rem;}
+.pie-col a,.pie-col span{font-size:.88rem;color:#c9c8ee;transition:color .2s;}
+.pie-col a:hover{color:#fff;text-decoration:underline;}
+.pie-inferior{
+  border-top:1px solid rgba(255,255,255,.18);
+  padding:1.2rem 0;display:flex;justify-content:space-between;
+  align-items:center;gap:1rem;flex-wrap:wrap;
+  font-size:.76rem;color:#a8a7dd;
+}
+.pie-inferior .legales{display:flex;gap:1.4rem;flex-wrap:wrap;}
+.pie-inferior a:hover{color:#fff;}
+
+/* ---------- Animación de aparición ---------- */
+.revelar{opacity:0;transform:translateY(26px);transition:opacity .7s ease,transform .7s ease;}
+.revelar.visible{opacity:1;transform:none;}
+
+/* ---------- Responsive ---------- */
+@media (max-width:960px){
+  .fabricacion{grid-template-columns:1fr;gap:2.6rem;}
+  .contacto-grid{grid-template-columns:1fr;}
+  .grid-marcas{grid-template-columns:repeat(2,1fr);}
+  .grid-valores{grid-template-columns:1fr;}
+  .franja-datos .container{grid-template-columns:repeat(2,1fr);gap:1.4rem;}
+  .pie-superior{grid-template-columns:1fr 1fr;}
+}
+@media (max-width:700px){
+  .burger{display:block;}
+  .nav-principal{display:none;width:100%;}
+  .nav-principal.abierto{display:block;}
+  .nav-principal ul{flex-direction:column;gap:.25rem;}
+  .nav-principal a{padding:.8rem 1rem;text-align:center;}
+  .topbar .container{justify-content:center;}
+  .marca img{height:42px;}
+  .marca-texto strong{font-size:1.05rem;}
+  .marca-texto small{font-size:.58rem;letter-spacing:.1em;}
+  .discos{grid-template-columns:1fr;}
+  .campos-dobles{grid-template-columns:1fr;}
+  .pie-superior{grid-template-columns:1fr;}
+  .pie-inferior{justify-content:center;text-align:center;}
+}
+</style>
+<style>
+/* ---------- Estilos propios del catálogo ---------- */
+.cat-hero{
+  background:linear-gradient(135deg,var(--azul) 0%,var(--azul-oscuro) 100%);
+  color:#fff;text-align:center;padding:4.5rem 1rem 3.8rem;
+}
+.cat-hero h1{
+  font-size:clamp(2rem,4.5vw,3.4rem);font-weight:700;
+  letter-spacing:.14em;text-transform:uppercase;
+}
+.cat-hero .separador{width:88px;height:4px;background:#fff;margin:1.2rem auto;border-radius:2px;}
+.cat-hero p{letter-spacing:.3em;text-transform:uppercase;font-weight:600;color:#e6e6ff;font-size:.95rem;}
+.cat-marca{display:flex;justify-content:center;padding:3.4rem 0 0;}
+section.productos{padding:3.2rem 0 5rem;}
+.grid-productos{
+  display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));
+  gap:2rem;max-width:860px;margin:2.6rem auto 0;
+}
+.producto-card{
+  background:#fff;border-radius:var(--radio);box-shadow:var(--sombra);
+  overflow:hidden;transition:transform .25s,box-shadow .25s;text-align:center;
+}
+.producto-card:hover{transform:translateY(-6px);box-shadow:var(--sombra-fuerte);}
+.producto-card img{
+  width:100%;aspect-ratio:1;object-fit:cover;background:#fff;padding:1.4rem;
+}
+.producto-card figcaption{
+  border-top:2px solid var(--azul);padding:1rem .8rem;
+}
+.producto-card b{
+  display:block;font-size:.95rem;font-weight:800;letter-spacing:.12em;
+  text-transform:uppercase;color:var(--azul);
+}
+.producto-card small{
+  display:block;margin-top:.25rem;font-size:.8rem;color:var(--gris-claro);
+}
+.cat-cta{text-align:center;margin-top:3rem;}
+</style>
+</head>
+<body id="inicio">
+
+<!-- ============ TOPBAR ============ -->
+<div class="topbar">
+  <div class="container">
+    <a href="tel:+34962223111">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.13.96.36 1.9.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.91.34 1.85.57 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+      962 223 111
+    </a>
+    <a href="mailto:gestion@industrialbolbaite.es">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m22 7-10 6L2 7"/></svg>
+      gestion@industrialbolbaite.es
+    </a>
+    <a href="https://www.industrialbolbaite.es/grupo-bolbaite">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M2 12h20M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
+      Bolbaite (Valencia), España
+    </a>
+  </div>
+</div>
+
+<!-- ============ CABECERA ============ -->
+<header class="cabecera">
+  <div class="container cabecera-inner">
+    <a class="marca" href="index.html">
+      <img src="assets/img/logo-marca-bolbaite.png" alt="Logo Grupo Bolbaite">
+      <span class="marca-texto">
+        <strong>GRUPO BOLBAITE</strong>
+        <small>Industrial Bolbaite, S.L. · Suinbol, S.L.</small>
+      </span>
+    </a>
+    <nav class="nav-principal" id="navPrincipal">
+      <ul>
+        <li><a href="index.html">Inicio</a></li>
+        <li><a href="catalogo.html" class="activo">Catálogo</a></li>
+        <li><a href="index.html#fabricacion-propia">Grupo Bolbaite</a></li>
+        <li><a href="index.html#contacto">Contacto</a></li>
+      </ul>
+    </nav>
+    <button class="burger" id="btnMenu" aria-label="Abrir menú">
+      <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round"><path d="M3 6h18M3 12h18M3 18h18"/></svg>
+    </button>
+  </div>
+</header>
+
+<!-- ============ PORTADA CATÁLOGO ============ -->
+<section class="cat-hero">
+  <h1>Catálogo</h1>
+  <div class="separador"></div>
+  <p>Abrasivos de fabricación propia desde 1970</p>
+</section>
+
+<!-- ============ MARCA ALBAIT ============ -->
+<section class="bloque fondo-gris" style="padding-bottom:0;">
+  <div class="cat-marca">
+    <div class="logo-albait revelar">
+      <span>ALBAIT</span>
+      <em class="logo-albait-sep"></em>
+      <img src="assets/img/logo-marca-bolbaite.png" alt="Logo Grupo Bolbaite">
+    </div>
+  </div>
+</section>
+
+<!-- ============ PRODUCTOS ============ -->
+<section class="productos">
+  <div class="container">
+    <div class="grid-productos">
+      <figure class="producto-card revelar">
+        <img src="assets/img/disco-corte-albait.png" alt="Disco de corte ALBAIT para inox">
+        <figcaption>
+          <b>Discos de corte</b>
+          <small>Corte de acero inoxidable y metales · 125 × 1,0 × 22,23 mm</small>
+        </figcaption>
+      </figure>
+      <figure class="producto-card revelar">
+        <img src="assets/img/disco-laminas-albait.png" alt="Disco de láminas ALBAIT para pulido">
+        <figcaption>
+          <b>Discos de láminas</b>
+          <small>Pulido y acabado de superficies · Grano zirconio 60–120</small>
+        </figcaption>
+      </figure>
+    </div>
+    <div class="cat-cta revelar">
+      <a class="btn btn-azul" href="index.html#contacto">
+        Pedir presupuesto
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- ============ PIE ============ -->
+<footer class="pie">
+  <div class="container pie-superior">
+    <div>
+      <span class="pie-marca">
+        <span class="pie-logo-chip">
+          <img src="assets/img/logo-marca-bolbaite.png" alt="Logo Grupo Bolbaite">
+        </span>
+        <span class="pie-marca-texto">
+          <strong>GRUPO BOLBAITE</strong>
+          <small>Industrial Bolbaite, S.L. · Suinbol, S.L.</small>
+        </span>
+      </span>
+      <p>Industrial Bolbaite, fábrica de artículos para el pulido, S.L. Fabricación y distribución de abrasivos desde 1970.</p>
+    </div>
+    <div class="pie-col">
+      <h4>Navegación</h4>
+      <ul>
+        <li><a href="index.html">Inicio</a></li>
+        <li><a href="catalogo.html">Catálogo</a></li>
+        <li><a href="index.html#contacto">Contacto</a></li>
+      </ul>
+    </div>
+    <div class="pie-col">
+      <h4>Contacto</h4>
+      <ul>
+        <li><span>Partida de Las Eras S/N</span></li>
+        <li><span>46822 Bolbaite (Valencia), España</span></li>
+        <li><a href="tel:+34962223111">962 223 111</a></li>
+        <li><a href="mailto:gestion@industrialbolbaite.es">gestion@industrialbolbaite.es</a></li>
+      </ul>
+    </div>
+  </div>
+  <div class="pie-inferior">
+    <div class="container" style="display:flex;justify-content:space-between;align-items:center;gap:1rem;flex-wrap:wrap;">
+      <span>© 2026 Industrial Bolbaite, S.L. — Abrasivos desde 1970</span>
+    </div>
+  </div>
+</footer>
+
+<script>
+// Menú móvil
+const btnMenu = document.getElementById('btnMenu');
+const nav = document.getElementById('navPrincipal');
+btnMenu.addEventListener('click', () => nav.classList.toggle('abierto'));
+nav.querySelectorAll('a').forEach(a => a.addEventListener('click', () => nav.classList.remove('abierto')));
+
+// Animación de aparición al hacer scroll
+const observador = new IntersectionObserver(entradas => {
+  entradas.forEach(e => { if (e.isIntersecting) { e.target.classList.add('visible'); observador.unobserve(e.target); } });
+}, { threshold: .14 });
+document.querySelectorAll('.revelar').forEach(el => observador.observe(el));
+</script>
+</body>
+</html>
