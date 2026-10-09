@@ -222,3 +222,16 @@ Los filtros afectan a todas las pestañas salvo donde se indique.
 - Edición de datos maestros desde la interfaz (escandallos, máquinas, clientes). Solo son editables las cantidades de la orden y el coste del operario.
 - Mapas geográficos.
 - Enlaces desde la web pública.
+
+## 10. Cambios durante la implementación
+
+Ajustes respecto al diseño original, decididos al ver la demo funcionando:
+
+- **Alerta 1 (bajo consumo) más robusta.** El intervalo típico es la mediana de los intervalos anteriores a la ventana reciente. La tasa de cada ventana es `Σ uds / (max(fin de la ventana, último pedido + intervalo) − primer pedido)`, lo que evita falsas alarmas por la fase del ciclo de pedido. Se exigen ≥ 3 pedidos en 24 meses (no en 12, para no perder a los clientes que han dejado de comprar) y no se avisa de consumos medios por debajo de **100 €/mes**, que solo metían ruido.
+- **Cobertura por familia como semáforo.** En lugar de barras en escala lineal, cada familia tiene una pista con cinco zonas de igual ancho (rotura · bajo · correcto · alto · sobrestock) y un punto dentro de su zona. Con escala lineal las zonas de 0 a 2 meses eran casi invisibles.
+- **Fabricado frente a vendido como índice** (vendido = 100). Las familias tienen volúmenes muy distintos (corte ~70.000 uds/año frente a franela ~1.300), así que las barras agrupadas en unidades ocultaban las familias pequeñas. Las unidades están en la tabla "Ver datos".
+- **Propuesta de compra** en el planificador. Para cada material en falta o por debajo del 20 % se propone la cantidad que deja, tras fabricar, al menos el 50 % del stock actual (`propuestaCompra` en `calculos.js`).
+- **El mensaje de tiempo de venta usa "stock + orden".** Es lo que de verdad hay que vender antes de agotar lo fabricado. Ejemplo: 500 uds de franela se venden en 7,6 meses, pero con el stock actual tardarían más de 3 años.
+- **Tendencia de la demanda por familia en los datos.** Franela −28 %/año, sisal +18 %, etc. Así la demo cuenta la historia completa: la franela se acumula porque se sigue fabricando igual aunque la demanda cae.
+- **Estilos por página** (`assets/css/produccion.css` y `assets/css/ventas.css`) además de `intranet.css`.
+- **Sobrestock en rojo, igual que la rotura.** Se distinguen por la posición en el semáforo y por el icono y el texto (▲ Sobrestock / ▼ Riesgo de rotura).
