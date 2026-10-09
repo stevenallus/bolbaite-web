@@ -1,0 +1,226 @@
+/* ============================================================
+   GRUPO BOLBAITE — Intranet demo · Estilos de Producción
+   ============================================================ */
+.pila-margen { margin-top: 18px; }
+.plan-layout { display: grid; grid-template-columns: minmax(0, 340px) minmax(0, 1fr); gap: 18px; align-items: start; }
+.plan-principal { min-width: 0; }
+.plan-principal > .tarjeta + .tarjeta, #planResultados > .tarjeta { margin-top: 18px; }
+
+/* ---------- Lista de referencias ---------- */
+.lista-refs { position: sticky; top: 76px; }
+.buscador { width: 100%; margin-bottom: 10px; }
+.lista-scroll { max-height: calc(100vh - 230px); min-height: 240px; overflow-y: auto; margin: 0 -8px; padding: 0 8px; }
+.grupo-familia h3 {
+  font-size: .68rem;
+  font-weight: 700;
+  letter-spacing: .1em;
+  text-transform: uppercase;
+  color: var(--tinta-3);
+  padding: 12px 0 6px;
+  display: flex;
+  justify-content: space-between;
+  gap: 8px;
+}
+.item-ref {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 9px 10px;
+  border-radius: 10px;
+  border: 1px solid transparent;
+}
+.item-ref:hover { background: #fbf8f8; }
+.item-ref.en-orden { background: var(--rojo-suave); border-color: #f2c9ce; }
+.item-ref-texto { flex: 1; min-width: 0; }
+.item-ref-texto b { display: block; font-size: .84rem; color: var(--tinta); }
+.item-ref-texto span { display: block; font-size: .76rem; color: var(--tinta-2); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.item-ref-datos { display: flex; align-items: center; gap: 6px; flex-wrap: wrap; margin-top: 4px; font-size: .74rem; color: var(--tinta-3); }
+
+/* ---------- Orden ---------- */
+.linea-orden {
+  display: grid;
+  grid-template-columns: minmax(0, 1.6fr) minmax(0, .8fr) minmax(130px, .9fr) auto auto;
+  align-items: center;
+  gap: 10px 14px;
+  padding: 12px 0;
+  border-bottom: 1px solid var(--linea-suave);
+}
+.linea-orden:first-child { padding-top: 0; }
+.linea-orden.destello { animation: destello 1.2s ease; }
+@keyframes destello { 0% { background: var(--rojo-suave); } 100% { background: transparent; } }
+.linea-ref b { display: block; font-size: .9rem; }
+.linea-ref small { color: var(--tinta-3); font-size: .76rem; }
+.linea-datos { font-size: .78rem; color: var(--tinta-2); }
+.linea-datos b { color: var(--tinta); }
+.entrada-cantidad {
+  display: flex;
+  align-items: center;
+  border: 1px solid #d9d9e3;
+  border-radius: 9px;
+  background: #fbfbfd;
+  overflow: hidden;
+}
+.entrada-cantidad:focus-within { border-color: var(--rojo-claro); }
+.entrada-cantidad input { width: 100%; border: none; background: transparent; padding: 8px 10px; font-weight: 700; outline: none; text-align: right; }
+.entrada-cantidad span { font-size: .74rem; color: var(--tinta-3); padding: 0 10px 0 4px; }
+.entrada-cantidad input::-webkit-outer-spin-button, .entrada-cantidad input::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
+.entrada-cantidad input[type=number] { -moz-appearance: textfield; appearance: textfield; }
+.entrada-cantidad.invalida { border-color: var(--critico); }
+.atajos { display: flex; gap: 6px; flex-wrap: wrap; }
+.orden-acciones { display: flex; align-items: center; justify-content: space-between; gap: 12px; flex-wrap: wrap; margin-top: 14px; }
+.orden-resumen { font-size: .84rem; color: var(--tinta-2); }
+.orden-botones { display: flex; gap: 8px; flex-wrap: wrap; }
+
+/* ---------- Mensaje de tiempo de venta ---------- */
+.mensaje-venta {
+  display: flex;
+  gap: 12px;
+  align-items: flex-start;
+  border-radius: var(--radio);
+  padding: 14px 18px;
+  font-size: .95rem;
+  margin-bottom: 18px;
+  border: 1px solid;
+}
+.mensaje-venta .icono { font-size: 1.2rem; line-height: 1.2; flex: none; }
+.mensaje-venta.ok { background: var(--ok-fondo); border-color: #bfe3bf; color: #134d13; }
+.mensaje-venta.serio { background: var(--serio-fondo); border-color: #f5c9b5; color: #6e2d0c; }
+.mensaje-venta.critico { background: var(--critico-fondo); border-color: #f0bcbc; color: #7d1717; }
+.mensaje-venta strong { font-weight: 800; }
+
+/* ---------- Materias primas ---------- */
+.fila-material { padding: 12px 0; border-bottom: 1px solid var(--linea-suave); }
+.fila-material:last-child { border-bottom: none; }
+.material-cabecera {
+  display: grid;
+  grid-template-columns: minmax(0, 2fr) repeat(4, minmax(0, 1fr));
+  gap: 6px 14px;
+  align-items: baseline;
+}
+.material-cabecera .valor { text-align: right; font-variant-numeric: tabular-nums; font-size: .86rem; white-space: nowrap; }
+.material-cabecera .valor small { display: none; font-size: .66rem; letter-spacing: .06em; text-transform: uppercase; color: var(--tinta-3); }
+.material-nombre b { font-size: .9rem; }
+.material-nombre small { display: block; font-size: .74rem; color: var(--tinta-3); }
+.barra-material { display: flex; align-items: center; gap: 12px; margin-top: 8px; }
+.barra-pista { flex: 1; height: 10px; background: var(--linea-suave); border-radius: 5px; overflow: hidden; position: relative; }
+.barra-relleno { height: 100%; border-radius: 0 4px 4px 0; transition: width .3s ease; }
+.barra-pista.falta { background: repeating-linear-gradient(135deg, var(--critico-fondo) 0 6px, #f6d4d4 6px 12px); }
+.barra-texto { font-size: .78rem; color: var(--tinta-2); white-space: nowrap; min-width: 150px; text-align: right; }
+.barra-texto b { color: var(--tinta); }
+.cabecera-columnas { padding-bottom: 6px; border-bottom: 1px solid var(--linea); }
+.cabecera-columnas span { font-size: .66rem; font-weight: 700; letter-spacing: .07em; text-transform: uppercase; color: var(--tinta-3); }
+.cabecera-columnas span + span { text-align: right; }
+
+/* ---------- Máquinas ---------- */
+.campo-operario { display: flex; align-items: center; gap: 8px; font-size: .8rem; color: var(--tinta-2); }
+.campo-operario input { width: 78px; text-align: right; font-weight: 700; }
+.etiqueta-cuello { font-size: .66rem; font-weight: 700; color: var(--serio-texto); background: var(--serio-fondo); border-radius: 999px; padding: 2px 8px; margin-left: 6px; white-space: nowrap; }
+
+/* ---------- Costes ---------- */
+.composicion { margin-bottom: 16px; }
+.composicion-barra { display: flex; height: 14px; border-radius: 7px; overflow: hidden; gap: 2px; background: var(--blanco); }
+.composicion-barra span { display: block; height: 100%; }
+.composicion .leyenda { margin-top: 8px; }
+.margen-bajo { color: var(--critico-texto); font-weight: 700; }
+
+/* ---------- Tiempo de venta ---------- */
+.tabla-venta td.escenario { color: var(--tinta-2); font-size: .8rem; }
+.tabla-venta tr.fila-ref td { padding-top: 14px; border-bottom: none; }
+.tabla-venta tr.fila-ref td b { font-size: .9rem; }
+.tabla-venta .celda-meses { display: inline-flex; flex-direction: column; align-items: flex-end; gap: 3px; }
+.tabla-venta .celda-meses b { font-size: .88rem; }
+
+/* ---------- BI ---------- */
+/* Semáforo de cobertura: cinco zonas de igual ancho (escala no lineal) */
+.semaforo { display: flex; flex-direction: column; gap: 2px; }
+.semaforo-fila {
+  display: grid;
+  grid-template-columns: 200px minmax(0, 1fr) 150px;
+  align-items: center;
+  gap: 16px;
+  padding: 8px 8px;
+  border: none;
+  background: none;
+  border-radius: 10px;
+  text-align: left;
+  cursor: pointer;
+  width: 100%;
+}
+.semaforo-fila:hover, .semaforo-fila.activa { background: #fbf6f7; }
+.semaforo-fila.activa { box-shadow: inset 3px 0 0 var(--rojo); }
+.semaforo-cabecera { cursor: default; padding-top: 0; padding-bottom: 0; }
+.semaforo-cabecera:hover { background: none; }
+.semaforo-zonas { display: grid; grid-template-columns: repeat(5, 1fr); gap: 2px; }
+.semaforo-zonas span { font-size: .64rem; font-weight: 700; letter-spacing: .04em; text-transform: uppercase; color: var(--tinta-3); text-align: center; }
+.semaforo-nombre b { display: block; font-size: .88rem; color: var(--tinta); }
+.semaforo-nombre small { font-size: .74rem; color: var(--tinta-3); }
+.semaforo-pista { position: relative; display: grid; grid-template-columns: repeat(5, 1fr); gap: 2px; height: 26px; }
+.semaforo-pista i { display: block; height: 100%; border-radius: 4px; }
+.semaforo-marca {
+  position: absolute;
+  top: 50%;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  transform: translate(-50%, -50%);
+  box-shadow: 0 0 0 2px #fff, 0 1px 4px rgba(0,0,0,.3);
+  transition: left .3s ease;
+}
+.semaforo-valor {
+  position: absolute;
+  top: 50%;
+  transform: translate(14px, -50%);
+  font-size: .76rem;
+  font-weight: 700;
+  color: var(--tinta);
+  white-space: nowrap;
+  background: rgba(255,255,255,.88);
+  padding: 0 5px;
+  border-radius: 4px;
+  font-variant-numeric: tabular-nums;
+}
+.semaforo-valor[data-lado="izq"] { transform: translate(calc(-100% - 14px), -50%); }
+.semaforo-estado { justify-self: start; }
+.rejilla-tendencias { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 12px; }
+.mini-tendencia {
+  text-align: left;
+  border: 1px solid var(--linea);
+  border-radius: 12px;
+  padding: 12px 12px 8px;
+  background: var(--blanco);
+  cursor: pointer;
+  transition: border-color .15s, box-shadow .15s;
+  min-width: 0;
+}
+.mini-tendencia:hover { border-color: var(--rojo-claro); }
+.mini-tendencia[aria-pressed="true"] { border-color: var(--rojo); box-shadow: 0 0 0 2px var(--rojo-suave); }
+.mini-tendencia header { display: flex; justify-content: space-between; align-items: baseline; gap: 8px; }
+.mini-tendencia header b { font-size: .86rem; }
+.mini-tendencia p { font-size: .74rem; color: var(--tinta-3); margin-top: 1px; }
+.mini-grafica { height: 54px; margin-top: 6px; position: relative; }
+#tendenciaAmpliada .tarjeta-interior { margin-top: 16px; border-top: 1px solid var(--linea); padding-top: 16px; }
+
+/* ---------- Responsive ---------- */
+@media (max-width: 1023px) {
+  .plan-layout { grid-template-columns: 1fr; }
+  .lista-refs { position: static; }
+  .lista-scroll { max-height: 340px; }
+}
+@media (max-width: 720px) {
+  .linea-orden { grid-template-columns: minmax(0, 1fr) auto; }
+  .linea-ref { grid-column: 1 / -1; }
+  .linea-datos { grid-column: 1 / -1; }
+  .atajos { grid-column: 1 / 2; }
+  .material-cabecera { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .material-nombre { grid-column: 1 / -1; }
+  .material-cabecera .valor { text-align: left; }
+  .material-cabecera .valor small { display: block; }
+  .cabecera-columnas { display: none; }
+  .barra-material { flex-wrap: wrap; }
+  .barra-pista { flex-basis: 100%; }
+  .barra-texto { text-align: left; min-width: 0; }
+  .semaforo-cabecera { display: none; }
+  .semaforo-fila { grid-template-columns: minmax(0, 1fr) auto; gap: 6px 10px; padding: 10px 4px; }
+  .semaforo-pista { grid-column: 1 / -1; grid-row: 2; }
+  .semaforo-estado { grid-column: 2; grid-row: 1; }
+}

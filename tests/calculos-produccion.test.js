@@ -169,3 +169,22 @@ test('resumenFamilias agrega stock, media y estado por familia propia', () => {
   assert.equal(f1.estado, 'correcto');
   assert.equal(r.find(x => x.familiaId === 'f2').estado, 'sin-datos');
 });
+
+test('propuestaCompra: repone faltantes y críticos hasta dejar el 50 % del stock', () => {
+  const d = datosBase();
+  const mats = C.necesidadesMaterial(d, [{ productoId: 'p1', cantidad: 100 }, { productoId: 'p2', cantidad: 20 }]);
+  // tela: queda 50 de 100 → ok, no se compra · grapas: faltan 400 → comprar 400 + 500
+  const r = C.propuestaCompra(mats);
+  assert.equal(r.length, 1);
+  assert.equal(r[0].materialId, 'm2');
+  assert.equal(r[0].comprar, 900);
+  cerca(r[0].coste, 9);
+  assert.equal(r[0].motivo, 'falta');
+  d.materiales[1].stock = 0;
+  const sinStock = C.propuestaCompra(C.necesidadesMaterial(d, [{ productoId: 'p2', cantidad: 10 }]));
+  assert.equal(sinStock[0].comprar, 200);
+  d.materiales[1].stock = 1000;
+  const critico = C.propuestaCompra(C.necesidadesMaterial(d, [{ productoId: 'p2', cantidad: 45 }])); // necesita 900, queda 100 (10 %)
+  assert.equal(critico[0].comprar, 400);
+  assert.equal(critico[0].motivo, 'critico');
+});

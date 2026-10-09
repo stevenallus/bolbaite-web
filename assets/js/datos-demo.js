@@ -155,6 +155,9 @@
     { id: 'FE-ACC', nombre: 'Fein accesorio MultiMaster', fam: 'fein', precio: 25, base: 3, pack: 1, int: [60, 90] },
   ];
 
+  // Tendencia anual de la demanda por familia (la franela cae y se sigue fabricando igual: sobrestock)
+  const TENDENCIA_FAMILIA = { franela: -0.28, sisal: 0.18, malla: 0.1, tejana: -0.12, laminas: 0.12, cuerda: -0.06 };
+
   const PERFILES = {
     pulidor: { n: [4, 6], productos: ['DT-150-12', 'DT-200-20', 'DT-300-30', 'DS-200-G', 'DS-250-G', 'DS-150-C', 'DF-150-10', 'DF-250-20', 'MA-125', 'TT-150', 'TT-250', 'CU-200', 'ES-200', 'PS-BL', 'PS-VE', 'PS-MA', 'PL-5', '3M-SB'] },
     metal: { n: [3, 5], productos: ['AC-125-10', 'AC-115-10', 'AC-230-19', 'AL-125-60', 'AL-125-80', 'AL-115-120', 'MA-125', 'MA-200', '3M-CUB', 'KL-SMT', 'KL-KRON', 'FE-WSG', 'FE-ACC'] },
@@ -368,7 +371,8 @@
       for (const fecha of fechas) {
         const atras = diasEntre(fecha, hoy);
         if (h.corte && atras < h.corte) continue;
-        let q = h.cantidad * Math.pow(1 + h.tendencia, -atras / 365) * entre(h.exacto ? 0.95 : 0.9, h.exacto ? 1.05 : 1.1);
+        const tendencia = (1 + h.tendencia) * (1 + (TENDENCIA_FAMILIA[prod.fam] || 0)) - 1;
+        let q = h.cantidad * Math.pow(1 + tendencia, -atras / 365) * entre(h.exacto ? 0.95 : 0.9, h.exacto ? 1.05 : 1.1);
         if (h.caida && atras < h.caida.dias) q *= h.caida.factor;
         const cantidad = redondeoPack(q, prod.pack);
         brutos.push({ clienteId: h.clienteId, fecha, lineas: [{ productoId: prod.id, cantidad, importe: dos(cantidad * prod.precio * (1 - h.descuento)) }] });

@@ -182,11 +182,25 @@
         quedaria,
         pct: stock > 0 ? quedaria / stock : (quedaria < 0 ? -1 : 0),
         estado: estadoMaterial(quedaria, stock),
+        costeUd: mat.costeUd,
         coste: a.necesario * mat.costeUd,
         usadoPor: [...a.usadoPor],
       });
     }
     return resultado;
+  }
+
+  // Compra propuesta para los materiales que faltan o quedan por debajo del 20 %:
+  // lo necesario para que, tras fabricar, quede al menos el 50 % del stock actual.
+  function propuestaCompra(materiales) {
+    return materiales
+      .filter(m => m.estado === 'falta' || m.estado === 'critico')
+      .map(m => {
+        const comprar = Math.ceil(Math.max(0, m.stock) * 0.5 - m.quedaria);
+        return { materialId: m.materialId, nombre: m.nombre, unidad: m.unidad, comprar, coste: comprar * m.costeUd, motivo: m.estado };
+      })
+      .filter(m => m.comprar > 0)
+      .sort((a, b) => b.coste - a.coste);
   }
 
   function necesidadesMaquina(datos, lineas) {
@@ -760,7 +774,7 @@
     mesClave, soloDia, sumarDias, diasEntre, mesesCompletos, inicioSemana,
     mapa, lineasVenta, numero, fechaCorta,
     ventaMediaMensual, unidadesEnFabricacion, stockMaterialDisponible,
-    estadoMaterial, necesidadesMaterial, necesidadesMaquina, resumenOrden,
+    estadoMaterial, necesidadesMaterial, propuestaCompra, necesidadesMaquina, resumenOrden,
     costeUnitarioEstandar, mesesParaVender, estadoTiempoVenta, cantidadSugerida,
     cobertura, estadoCobertura, tendenciaFamilia, resumenProductos, resumenFamilias,
     ventasFiltradas, agregarPor, serieMensual, kpisVentas, variacion,
