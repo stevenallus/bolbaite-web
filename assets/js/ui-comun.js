@@ -63,6 +63,7 @@
       'sin-datos': ['neutro', '–', 'Sin ventas'],
     },
     alerta: {
+      ok: ['ok', '✓', 'Sin alertas'],
       aviso: ['serio', '!', 'Aviso'],
       critico: ['critico', '✕', 'Crítico'],
     },

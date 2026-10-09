@@ -227,6 +227,7 @@ select.selector:focus, input.entrada-texto:focus { border-color: var(--rojo-clar
   min-width: 0;
 }
 .tarjeta + .tarjeta, .pila > * + * { margin-top: 18px; }
+.pila-margen { margin-top: 18px; }
 .tarjeta-destacada { border-left: 5px solid var(--rojo); }
 .tarjeta-cabecera { display: flex; align-items: flex-start; justify-content: space-between; gap: 10px 16px; flex-wrap: wrap; margin-bottom: 14px; }
 .tarjeta-titulo { font-size: .78rem; font-weight: 700; text-transform: uppercase; letter-spacing: .1em; color: var(--rojo); }
@@ -364,7 +365,9 @@ details.ver-datos .tabla-scroll { margin-top: 8px; }
   .tarjeta { padding: 16px 14px; }
   .marca-texto small { display: none; }
   .nav-intranet a { padding: 7px 12px; }
-  .pestana { padding: 9px 12px; font-size: .84rem; }
+  .pestanas { flex-wrap: nowrap; overflow-x: auto; scrollbar-width: none; min-width: 0; max-width: 100%; }
+  .pestanas::-webkit-scrollbar { display: none; }
+  .pestana { padding: 9px 12px; font-size: .84rem; flex: none; }
   .intranet-barra { position: static; }
 }
 

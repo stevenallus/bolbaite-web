@@ -211,9 +211,9 @@
         : `Quedaría <b>${num(pct * 100)} %</b>`;
       return `<div class="fila-material">
         <div class="material-cabecera">
-          <div class="material-nombre"><b>${esc(m.nombre)}</b><small>Usado por ${esc(usado)}</small></div>
+          <div class="material-nombre"><b>${esc(m.nombre)}</b><small>Usado por ${esc(usado)}</small>${m.stock < 0 ? `<small class="aviso-comprometido">Las órdenes ya confirmadas dejan un déficit de ${cantidadMaterial(-m.stock, m.unidad)}</small>` : ''}</div>
           <div class="valor"><small>Necesario</small>${cantidadMaterial(m.necesario, m.unidad)}</div>
-          <div class="valor"><small>Stock</small>${cantidadMaterial(m.stock, m.unidad)}</div>
+          <div class="valor"><small>Stock disponible</small>${cantidadMaterial(Math.max(0, m.stock), m.unidad)}</div>
           <div class="valor"><small>Quedaría</small>${cantidadMaterial(m.quedaria, m.unidad)}</div>
           <div class="valor"><small>Coste</small>${eur(m.coste, m.coste < 100 ? 2 : 0)}</div>
         </div>
@@ -240,7 +240,7 @@
       </div>` : '';
 
     $('tablaMateriales').innerHTML = `
-      <div class="material-cabecera cabecera-columnas"><span>Material</span><span>Necesario</span><span>Stock</span><span>Quedaría</span><span>Coste</span></div>
+      <div class="material-cabecera cabecera-columnas"><span>Material</span><span>Necesario</span><span>Stock disponible</span><span>Quedaría</span><span>Coste</span></div>
       ${filas}${bloqueCompra}`;
   }
 

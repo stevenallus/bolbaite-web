@@ -1,7 +1,6 @@
 /* ============================================================
    GRUPO BOLBAITE — Intranet demo · Estilos de Producción
    ============================================================ */
-.pila-margen { margin-top: 18px; }
 .plan-layout { display: grid; grid-template-columns: minmax(0, 340px) minmax(0, 1fr); gap: 18px; align-items: start; }
 .plan-principal { min-width: 0; }
 .plan-principal > .tarjeta + .tarjeta, #planResultados > .tarjeta { margin-top: 18px; }
@@ -101,6 +100,7 @@
 .material-cabecera .valor small { display: none; font-size: .66rem; letter-spacing: .06em; text-transform: uppercase; color: var(--tinta-3); }
 .material-nombre b { font-size: .9rem; }
 .material-nombre small { display: block; font-size: .74rem; color: var(--tinta-3); }
+.material-nombre small.aviso-comprometido { color: var(--critico-texto); font-weight: 600; }
 .barra-material { display: flex; align-items: center; gap: 12px; margin-top: 8px; }
 .barra-pista { flex: 1; height: 10px; background: var(--linea-suave); border-radius: 5px; overflow: hidden; position: relative; }
 .barra-relleno { height: 100%; border-radius: 0 4px 4px 0; transition: width .3s ease; }

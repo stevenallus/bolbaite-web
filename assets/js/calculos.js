@@ -480,8 +480,9 @@
       let g = grupos.get(k);
       if (!g) { g = { muestra: l, pedidos: new Map() }; grupos.set(k, g); }
       let p = g.pedidos.get(l.pedidoId);
-      if (!p) { p = { fecha: l.fecha, cantidad: 0 }; g.pedidos.set(l.pedidoId, p); }
+      if (!p) { p = { fecha: l.fecha, cantidad: 0, importe: 0 }; g.pedidos.set(l.pedidoId, p); }
       p.cantidad += l.cantidad;
+      p.importe += l.importe;
     }
     for (const g of grupos.values()) g.lista = [...g.pedidos.values()].sort((a, b) => a.fecha - b.fecha);
     return grupos;
@@ -512,7 +513,8 @@
 
   const NOMBRE_BASE = { 3: 'trimestral', 6: 'semestral', 12: 'anual' };
 
-  function alertasBajoConsumo(datos, { base = 6, comercialId } = {}) {
+  // importeMinimoMes: no avisa de consumos medios por debajo de ese valor (€/mes), que solo meten ruido.
+  function alertasBajoConsumo(datos, { base = 6, comercialId, importeMinimoMes = 100 } = {}) {
     const hoy = soloDia(datos.hoy);
     const hace24m = sumarDias(hoy, -730);
     const clientes = mapa(datos.clientes);
@@ -532,6 +534,8 @@
       if (!pedidosBase.length) continue;
       const recientes = lista.filter(p => p.fecha > inicioReciente);
       const tasaBase = tasaConsumo(pedidosBase, inicioReciente, intervalo);
+      const precioMedio = lista.reduce((t, p) => t + p.importe, 0) / lista.reduce((t, p) => t + p.cantidad, 0);
+      if (tasaBase * precioMedio < importeMinimoMes) continue;
       const tasaReciente = tasaConsumo(recientes, hoy, intervalo);
       const caida = 1 - tasaReciente / tasaBase;
       if (caida < 0.25) continue;

@@ -238,7 +238,14 @@
     // Javi jefe · grandes cuentas, Madrid, Barcelona y Zaragoza
     { nombre: 'Grupo Inoxmad', provincia: 'Madrid', localidad: 'Getafe', comercial: 'javi-jefe', perfil: 'metal', tam: 3.2 },
     { nombre: 'Suministros Industriales Centro', provincia: 'Madrid', localidad: 'Alcobendas', comercial: 'javi-jefe', perfil: 'distribuidor', tam: 2.8 },
-    { nombre: 'Pulimentos Castilla', provincia: 'Madrid', localidad: 'Móstoles', comercial: 'javi-jefe', perfil: 'pulidor', tam: 1.8 },
+    { nombre: 'Pulimentos Castilla', provincia: 'Madrid', localidad: 'Móstoles', comercial: 'javi-jefe', perfil: 'pulidor', tam: 1.8,
+      habitos: [
+        { p: 'PS-VE', cantidad: 60, exacto: { ultimo: 20, intervalos: [30] }, caida: { dias: 60, factor: 0.58 } },
+        { p: 'DT-200-20', intervalo: 30, cantidad: 90 },
+        { p: 'DS-250-G', intervalo: 45, cantidad: 70 },
+        { p: 'CU-200', intervalo: 45, cantidad: 40 },
+        { p: 'TT-250', intervalo: 60, cantidad: 30 },
+      ] },
     { nombre: 'Metalúrgica Coslada', provincia: 'Madrid', localidad: 'Coslada', comercial: 'javi-jefe', perfil: 'metal', tam: 1.6, tendencia: -0.25 },
     { nombre: 'Distribuidora Abrasivos Catalunya', provincia: 'Barcelona', localidad: 'Sabadell', comercial: 'javi-jefe', perfil: 'distribuidor', tam: 3 },
     { nombre: 'Poliments Vallès', provincia: 'Barcelona', localidad: 'Terrassa', comercial: 'javi-jefe', perfil: 'pulidor', tam: 1.5 },
@@ -434,7 +441,7 @@
     for (const c of clientes) {
       const nuevos = diasEntre(c.fechaAlta, hoy) <= 90;
       if (nuevos) visitas.push({ clienteId: c.id, comercialId: c.comercialId, fecha: c.fechaAlta, nota: 'Primera visita · alta de cliente' });
-      const n = nuevos ? entero(0, 1) : entero(0, 4);
+      const n = nuevos ? entero(0, 1) : entero(0, 5);
       for (let k = 0; k < n; k++) {
         const atras = entero(1, nuevos ? diasEntre(c.fechaAlta, hoy) : 175);
         visitas.push({ clienteId: c.id, comercialId: c.comercialId, fecha: dia(hoy, -atras), nota: elegir(NOTAS_VISITA) });

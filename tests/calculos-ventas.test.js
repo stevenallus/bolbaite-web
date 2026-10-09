@@ -150,3 +150,11 @@ test('ventasFiltradas, agregarPor y carteraClientes', () => {
   assert.equal(C.diasEntre(c2.ultimaCompra, fecha(2026, 9, 2)), 0);
   assert.equal(c2.ultimaVisita, null);
 });
+
+test('alertasBajoConsumo ignora consumos de poco importe (< 100 €/mes por defecto)', () => {
+  const d = datosBase();
+  // 2 uds × 5 € cada 30 días ≈ 10 €/mes, y deja de pedir
+  periodicos(d, 'c1', 'p1', 30, 600, 200, 2);
+  assert.equal(C.alertasBajoConsumo(d, { base: 6 }).length, 0);
+  assert.equal(C.alertasBajoConsumo(d, { base: 6, importeMinimoMes: 0 }).length, 1);
+});
