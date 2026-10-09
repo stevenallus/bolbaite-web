@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Grupo Bolbaite — Abrasivos desde 1970 | Industrial Bolbaite, S.L.</title>
 <meta name="description" content="Grupo Bolbaite: fabricación propia y distribución oficial de abrasivos 3M, sia, Klingspor y Fein. Discos de corte y pulido desde 1970. Servicio, calidad y precio.">
-<link rel="icon" type="image/png" href="assets/img/logo-grupo-bolbaite.png">
+<link rel="icon" type="image/png" href="assets/img/logo-marca-bolbaite.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Arimo:ital,wght@0,400;0,500;0,600;0,700;1,400&display=swap" rel="stylesheet">
@@ -46,7 +46,7 @@ a{text-decoration:none;color:inherit;}
   font-size:.8rem;
   padding:.45rem 0;
 }
-.topbar .container{display:flex;justify-content:flex-end;gap:1.6rem;flex-wrap:wrap;}
+.topbar .container{display:flex;justify-content:center;gap:1.6rem;flex-wrap:wrap;text-align:center;}
 .topbar a{display:inline-flex;align-items:center;gap:.4rem;transition:color .2s;}
 .topbar a:hover{color:#fff;}
 .topbar svg{width:13px;height:13px;flex:none;}
@@ -61,6 +61,29 @@ header.cabecera{
 }
 .marca{display:flex;align-items:center;gap:1rem;}
 .marca img{height:52px;width:auto;}
+.marca-texto{display:flex;flex-direction:column;line-height:1.15;}
+.marca-texto strong{
+  font-size:1.35rem;font-weight:800;letter-spacing:.02em;
+  color:var(--azul);white-space:nowrap;
+}
+.marca-texto small{
+  font-size:.68rem;font-weight:600;letter-spacing:.14em;
+  text-transform:uppercase;color:var(--azul-oscuro);white-space:nowrap;
+}
+.pie-marca{display:flex;align-items:center;gap:.9rem;margin-bottom:1rem;}
+.pie-logo-chip{
+  display:inline-flex;align-items:center;background:#fff;
+  border-radius:10px;padding:.45rem .6rem;
+}
+.pie-logo-chip img{height:44px;width:auto;display:block;}
+.pie-marca-texto{display:flex;flex-direction:column;line-height:1.15;}
+.pie-marca-texto strong{
+  font-size:1.15rem;font-weight:800;letter-spacing:.02em;color:#fff;white-space:nowrap;
+}
+.pie-marca-texto small{
+  font-size:.62rem;font-weight:600;letter-spacing:.14em;
+  text-transform:uppercase;color:#c9c8ee;white-space:nowrap;
+}
 .burger{
   display:none;background:none;border:1.5px solid var(--azul);
   border-radius:var(--radio);padding:.45rem .6rem;cursor:pointer;
@@ -120,7 +143,7 @@ header.cabecera{
   text-shadow:0 4px 26px rgba(0,0,0,.55);
 }
 .hero-contenido .separador{
-  width:88px;height:4px;background:var(--rojo);
+  width:88px;height:4px;background:#fff;
   margin:1.3rem auto;border-radius:2px;
 }
 .hero-contenido p{
@@ -172,26 +195,24 @@ section.bloque.fondo-gris{background:var(--gris-fondo);}
 }
 .acciones{display:flex;gap:.9rem;flex-wrap:wrap;}
 .discos{
-  display:grid;grid-template-columns:1fr 1fr;gap:1.4rem;
+  display:grid;grid-template-columns:1fr;justify-items:center;
 }
-.disco-card{
+.logo-albait{
+  display:flex;align-items:center;gap:1.4rem;
   background:#fff;border-radius:var(--radio);
-  box-shadow:var(--sombra);overflow:hidden;
+  box-shadow:var(--sombra);padding:2.8rem 4rem;
   transition:transform .25s,box-shadow .25s;
 }
-.disco-card:hover{transform:translateY(-6px);box-shadow:var(--sombra-fuerte);}
-.disco-card img{
-  width:100%;aspect-ratio:1;object-fit:cover;background:#fff;
+.logo-albait:hover{transform:translateY(-6px);box-shadow:var(--sombra-fuerte);}
+.logo-albait span{
+  font-size:clamp(2.4rem,5vw,3.6rem);font-weight:800;
+  font-style:italic;letter-spacing:.08em;color:var(--azul-oscuro);
+  line-height:1;
 }
-.disco-card figcaption{
-  text-align:center;font-size:.78rem;font-weight:700;
-  letter-spacing:.1em;text-transform:uppercase;color:var(--gris);
-  padding:.75rem .5rem;border-top:2px solid var(--azul);
+.logo-albait-sep{
+  width:2px;height:64px;background:#e3e3ef;border-radius:2px;
 }
-.disco-card figcaption small{
-  display:block;font-weight:400;color:var(--gris-claro);
-  letter-spacing:.04em;text-transform:none;font-size:.74rem;
-}
+.logo-albait img{height:74px;width:auto;}
 
 /* ---------- Marcas / distribuidor oficial ---------- */
 .grid-marcas{
@@ -321,9 +342,6 @@ footer.pie{background:var(--azul);color:#fff;}
   display:grid;grid-template-columns:1.3fr 1fr 1fr;gap:2.5rem;
   padding:3.2rem 0;
 }
-.pie-superior img.filtro-blanco{
-  filter:brightness(0) invert(1);height:44px;width:auto;margin-bottom:1rem;
-}
 .pie-superior p{font-size:.88rem;color:#c9c8ee;max-width:320px;}
 .pie-col h4{
   font-size:.78rem;font-weight:700;letter-spacing:.18em;
@@ -363,7 +381,9 @@ footer.pie{background:var(--azul);color:#fff;}
   .nav-principal a{padding:.8rem 1rem;text-align:center;}
   .topbar .container{justify-content:center;}
   .marca img{height:42px;}
-  .discos{grid-template-columns:1fr 1fr;gap:.9rem;}
+  .marca-texto strong{font-size:1.05rem;}
+  .marca-texto small{font-size:.58rem;letter-spacing:.1em;}
+  .discos{grid-template-columns:1fr;}
   .campos-dobles{grid-template-columns:1fr;}
   .pie-superior{grid-template-columns:1fr;}
   .pie-inferior{justify-content:center;text-align:center;}
@@ -394,7 +414,11 @@ footer.pie{background:var(--azul);color:#fff;}
 <header class="cabecera">
   <div class="container cabecera-inner">
     <a class="marca" href="#inicio">
-      <img src="assets/img/logo-grupo-bolbaite.png" alt="Logo Grupo Bolbaite">
+      <img src="assets/img/logo-marca-bolbaite.png" alt="Logo Grupo Bolbaite">
+      <span class="marca-texto">
+        <strong>GRUPO BOLBAITE</strong>
+        <small>Industrial Bolbaite, S.L. · Suinbol, S.L.</small>
+      </span>
     </a>
     <nav class="nav-principal" id="navPrincipal">
       <ul>
@@ -435,8 +459,8 @@ footer.pie{background:var(--azul);color:#fff;}
   <div class="container fabricacion">
     <div class="revelar">
       <span class="etiqueta" style="display:inline-block;background:var(--azul);color:#fff;font-size:.7rem;font-weight:700;letter-spacing:.22em;text-transform:uppercase;padding:.38rem 1.1rem;border-radius:99px;margin-bottom:1.1rem;">Fabricación propia</span>
-      <h2>Desde 1970 innovamos para fabricar <em>el disco de mayor rendimiento</em></h2>
-      <p>Más de cinco décadas fabricando discos de corte y pulido con tecnología propia. Cada disco ALBAIT se diseña y se produce en nuestras instalaciones para ofrecer el máximo rendimiento, durabilidad y seguridad en cada aplicación.</p>
+      <h2>Desde 1970, ALBAIT busca innovar para fabricar el disco de mayor rendimiento</h2>
+      <p>Más de cinco décadas fabricando abrasivos con tecnología propia. Cada disco ALBAIT se diseña y se produce para ofrecer el máximo rendimiento, durabilidad y seguridad en cada aplicación.</p>
       <ul class="lista-check">
         <li>
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>
@@ -460,14 +484,11 @@ footer.pie{background:var(--azul);color:#fff;}
       </div>
     </div>
     <div class="discos revelar">
-      <figure class="disco-card">
-        <img src="assets/img/disco-albait-inox.png" alt="Disco de corte ALBAIT para inox">
-        <figcaption>Disco inox <small>Corte de acero inoxidable</small></figcaption>
-      </figure>
-      <figure class="disco-card">
-        <img src="assets/img/disco-albait-aluminio.png" alt="Disco de corte ALBAIT para aluminio">
-        <figcaption>Disco aluminio <small>Corte de aluminio y fundición</small></figcaption>
-      </figure>
+      <div class="logo-albait">
+        <span>ALBAIT</span>
+        <em class="logo-albait-sep"></em>
+        <img src="assets/img/logo-marca-bolbaite.png" alt="Logo Grupo Bolbaite">
+      </div>
     </div>
   </div>
 </section>
@@ -478,7 +499,7 @@ footer.pie{background:var(--azul);color:#fff;}
     <div class="encabezado-seccion revelar">
       <span class="etiqueta">Distribución oficial</span>
       <h2>Distribuidor oficial de las marcas líderes</h2>
-      <p>Suministro directo de abrasivos 3M, sia, Klingspor y Fein: las marcas más importantes del sector, con el respaldo y el servicio de Grupo Bolbaite.</p>
+      <p>Suministro directo de abrasivos 3M, SIA, KLINGSPOR y FEIN: las marcas más importantes del sector, con el respaldo y el servicio de Grupo Bolbaite.</p>
     </div>
     <div class="grid-marcas">
       <div class="marca-card revelar">
@@ -542,7 +563,7 @@ footer.pie{background:var(--azul);color:#fff;}
       </div>
     </div>
     <div class="centro-acciones revelar">
-      <a class="btn btn-rojo" href="#contacto">
+      <a class="btn btn-azul" href="#contacto">
         Contactar con nosotros
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
       </a>
@@ -598,7 +619,7 @@ footer.pie{background:var(--azul);color:#fff;}
         </div>
         <div>
           <b>Horario</b>
-          <span class="val">Lunes a viernes · 8:00 – 18:00</span>
+          <span class="val">Lunes a Jueves · 9:00 – 17:00 · Viernes · 9:00 – 14:00</span>
         </div>
       </div>
     </div>
@@ -654,7 +675,15 @@ footer.pie{background:var(--azul);color:#fff;}
 <footer class="pie">
   <div class="container pie-superior">
     <div>
-      <img class="filtro-blanco" src="assets/img/logo-grupo-bolbaite.png" alt="Grupo Bolbaite">
+      <span class="pie-marca">
+        <span class="pie-logo-chip">
+          <img src="assets/img/logo-marca-bolbaite.png" alt="Logo Grupo Bolbaite">
+        </span>
+        <span class="pie-marca-texto">
+          <strong>GRUPO BOLBAITE</strong>
+          <small>Industrial Bolbaite, S.L. · Suinbol, S.L.</small>
+        </span>
+      </span>
       <p>Industrial Bolbaite, fábrica de artículos para el pulido, S.L. Fabricación y distribución de abrasivos desde 1970.</p>
     </div>
     <div class="pie-col">
