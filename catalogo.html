@@ -380,6 +380,7 @@ footer.pie{background:var(--azul);color:#fff;}
   .fabricacion{grid-template-columns:1fr;gap:2.6rem;}
   .contacto-grid{grid-template-columns:1fr;}
   .grid-marcas{grid-template-columns:repeat(2,1fr);}
+  #gamas .grid-productos{grid-template-columns:repeat(3,1fr);}
   .grid-valores{grid-template-columns:1fr;}
   .franja-datos .container{grid-template-columns:repeat(2,1fr);gap:1.4rem;}
   .pie-superior{grid-template-columns:1fr 1fr;}
@@ -395,6 +396,7 @@ footer.pie{background:var(--azul);color:#fff;}
   .marca-texto strong{font-size:1.05rem;}
   .marca-texto small{font-size:.58rem;letter-spacing:.1em;}
   .discos{grid-template-columns:1fr;}
+  #gamas .grid-productos{grid-template-columns:repeat(2,1fr);}
   .campos-dobles{grid-template-columns:1fr;}
   .pie-superior{grid-template-columns:1fr;}
   .pie-inferior{justify-content:center;text-align:center;}
@@ -421,6 +423,9 @@ section#gamas{padding-top:2.6rem;}
 .grid-productos{
   display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));
   gap:2rem;max-width:1080px;margin:2.6rem auto 0;
+}
+#gamas .grid-productos{
+  grid-template-columns:repeat(6,1fr);max-width:1280px;
 }
 .producto-card{
   background:#fff;border-radius:var(--radio);box-shadow:var(--sombra);
@@ -700,6 +705,14 @@ section#gamas{padding-top:2.6rem;}
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="3"/><path d="M12 3v6M12 15v6M3 12h6M15 12h6"/></svg>
         </div>
         <h3>Productos de higiene</h3>
+      </div>
+      <div class="producto-card revelar">
+        <img src="assets/img/poleas-contacto.png" alt="Poleas de contacto ALBAIT">
+        <h3>Poleas de contacto</h3>
+      </div>
+      <div class="producto-card revelar">
+        <img src="assets/img/cepillos-mil-hojas.png" alt="Cepillos de mil hojas ALBAIT">
+        <h3>Cepillos de mil hojas</h3>
       </div>
     </div>
     <div class="cat-cta revelar">
