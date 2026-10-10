@@ -342,6 +342,17 @@ section.lema cite{
 .aviso-form{
   font-size:.75rem;color:var(--gris-claro);text-align:center;margin-top:.9rem;
 }
+.form-estado{
+  font-size:.8rem;color:var(--rojo);text-align:center;margin-top:.8rem;
+}
+.form-exito{text-align:center;padding:.4rem 0;}
+.form-exito .icono-exito{
+  width:56px;height:56px;margin:0 auto 1.1rem;display:flex;align-items:center;justify-content:center;
+  border-radius:50%;background:var(--azul);color:var(--blanco);
+}
+.form-exito .icono-exito svg{width:26px;height:26px;}
+.form-exito h3{margin-bottom:.5rem;}
+.form-exito p{font-size:.9rem;color:var(--gris);line-height:1.6;margin-bottom:1.4rem;}
 
 /* ---------- Pie ---------- */
 footer.pie{background:var(--azul);color:#fff;}
@@ -645,50 +656,52 @@ footer.pie{background:var(--azul);color:#fff;}
           referrerpolicy="no-referrer-when-downgrade"></iframe>
       </div>
     </div>
-    <form class="form-contacto revelar" action="mailto:gestion@industrialbolbaite.es" method="post" enctype="text/plain">
-      <h3>Solicite información sin compromiso</h3>
-      <div class="campos-dobles">
-        <div class="campo">
-          <label for="nombre">Nombre *</label>
-          <input type="text" id="nombre" name="nombre" required placeholder="Su nombre">
+    <form class="form-contacto revelar" id="formContacto" action="https://formsubmit.co/stevenscacc@gmail.com" method="POST">
+      <input type="hidden" name="_subject" value="Nueva consulta desde la web — Grupo Bolbaite">
+      <input type="hidden" name="_template" value="table">
+      <input type="hidden" name="_captcha" value="false">
+      <input type="text" name="_honey" style="display:none" tabindex="-1" autocomplete="off" aria-hidden="true">
+      <div id="formCuerpo">
+        <h3>Solicite información sin compromiso</h3>
+        <div class="campos-dobles">
+          <div class="campo">
+            <label for="nombre">Nombre *</label>
+            <input type="text" id="nombre" name="nombre" required placeholder="Su nombre">
+          </div>
+          <div class="campo">
+            <label for="empresa">Empresa</label>
+            <input type="text" id="empresa" name="empresa" placeholder="Nombre de su empresa">
+          </div>
+        </div>
+        <div class="campos-dobles">
+          <div class="campo">
+            <label for="telefono">Teléfono *</label>
+            <input type="tel" id="telefono" name="telefono" required placeholder="600 000 000">
+          </div>
+          <div class="campo">
+            <label for="email">Email *</label>
+            <input type="email" id="email" name="email" required placeholder="usted@empresa.com">
+          </div>
         </div>
         <div class="campo">
-          <label for="empresa">Empresa</label>
-          <input type="text" id="empresa" name="empresa" placeholder="Nombre de su empresa">
+          <label for="mensaje">Mensaje</label>
+          <textarea id="mensaje" name="mensaje" placeholder="Cuéntenos su aplicación: material, medidas, cantidades…"></textarea>
         </div>
+        <button type="submit" class="btn btn-azul">
+          <span id="btnTexto">Enviar consulta</span>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="m22 2-7 20-4-9-9-4 20-7z"/></svg>
+        </button>
+        <p class="aviso-form">Al enviar acepta nuestra <a href="#" style="color:var(--azul);text-decoration:underline;">política de privacidad</a>.</p>
+        <p class="form-estado" id="formEstado" role="status" aria-live="polite" hidden></p>
       </div>
-      <div class="campos-dobles">
-        <div class="campo">
-          <label for="telefono">Teléfono *</label>
-          <input type="tel" id="telefono" name="telefono" required placeholder="600 000 000">
+      <div class="form-exito" id="formExito" hidden>
+        <div class="icono-exito">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>
         </div>
-        <div class="campo">
-          <label for="email">Email *</label>
-          <input type="email" id="email" name="email" required placeholder="usted@empresa.com">
-        </div>
+        <h3>¡Consulta enviada!</h3>
+        <p>Gracias por escribirnos. Hemos recibido sus datos y le contactaremos a la mayor brevedad posible.</p>
+        <button type="button" class="btn btn-azul" id="btnNuevoEnvio">Enviar otra consulta</button>
       </div>
-      <div class="campo">
-        <label for="interes">¿Qué necesita?</label>
-        <select id="interes" name="interes">
-          <option value="">Seleccione una opción…</option>
-          <option>Discos de fabricación propia (ALBAIT)</option>
-          <option>Productos 3M</option>
-          <option>Productos sia Abrasives</option>
-          <option>Productos Klingspor</option>
-          <option>Productos Fein</option>
-          <option>Solución a medida</option>
-          <option>Otros</option>
-        </select>
-      </div>
-      <div class="campo">
-        <label for="mensaje">Mensaje</label>
-        <textarea id="mensaje" name="mensaje" placeholder="Cuéntenos su aplicación: material, medidas, cantidades…"></textarea>
-      </div>
-      <button type="submit" class="btn btn-azul">
-        Enviar consulta
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="m22 2-7 20-4-9-9-4 20-7z"/></svg>
-      </button>
-      <p class="aviso-form">Al enviar acepta nuestra <a href="#" style="color:var(--azul);text-decoration:underline;">política de privacidad</a>.</p>
     </form>
   </div>
 </section>
@@ -751,6 +764,43 @@ const observador = new IntersectionObserver(entradas => {
   entradas.forEach(e => { if (e.isIntersecting) { e.target.classList.add('visible'); observador.unobserve(e.target); } });
 }, { threshold: .14 });
 document.querySelectorAll('.revelar').forEach(el => observador.observe(el));
+
+// Envío del formulario de contacto sin salir de la página (FormSubmit reenvía la consulta por email)
+const formContacto = document.getElementById('formContacto');
+formContacto.addEventListener('submit', async (e) => {
+  e.preventDefault();
+  const boton = formContacto.querySelector('button[type="submit"]');
+  const btnTexto = document.getElementById('btnTexto');
+  const formEstado = document.getElementById('formEstado');
+  boton.disabled = true;
+  btnTexto.textContent = 'Enviando…';
+  formEstado.hidden = true;
+  try {
+    const respuesta = await fetch('https://formsubmit.co/ajax/stevenscacc@gmail.com', {
+      method: 'POST',
+      body: new FormData(formContacto),
+      headers: { 'Accept': 'application/json' }
+    });
+    if (!respuesta.ok) throw new Error('Error en el envío');
+    const resultado = await respuesta.json();
+    if (String(resultado.success) !== 'true') throw new Error('Error en el envío');
+    document.getElementById('formCuerpo').hidden = true;
+    document.getElementById('formExito').hidden = false;
+  } catch {
+    formEstado.textContent = 'No se pudo enviar la consulta. Compruebe su conexión e inténtelo de nuevo, o llámenos al 962 223 111.';
+    formEstado.hidden = false;
+    boton.disabled = false;
+    btnTexto.textContent = 'Enviar consulta';
+  }
+});
+document.getElementById('btnNuevoEnvio').addEventListener('click', () => {
+  formContacto.reset();
+  document.getElementById('formExito').hidden = true;
+  document.getElementById('formCuerpo').hidden = false;
+  const boton = formContacto.querySelector('button[type="submit"]');
+  boton.disabled = false;
+  document.getElementById('btnTexto').textContent = 'Enviar consulta';
+});
 </script>
 </body>
 </html>
