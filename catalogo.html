@@ -392,7 +392,10 @@ footer.pie{background:var(--azul);color:#fff;}
 <style>
 /* ---------- Estilos propios del catálogo ---------- */
 .cat-hero{
-  background:linear-gradient(135deg,var(--azul) 0%,var(--azul-oscuro) 100%);
+  background:
+    linear-gradient(rgba(16,35,74,.82),rgba(16,35,74,.82)),
+    url("https://cdn.pymesenlared.es/img/364/4893/0x352/foto-productos-general.1789646556.png") center bottom/contain no-repeat,
+    linear-gradient(135deg,var(--azul) 0%,var(--azul-oscuro) 100%);
   color:#fff;text-align:center;padding:4.5rem 1rem 3.8rem;
 }
 .cat-hero h1{
@@ -404,14 +407,17 @@ footer.pie{background:var(--azul);color:#fff;}
 .cat-marca{display:flex;justify-content:center;padding:3.4rem 0 0;}
 section.productos{padding:3.2rem 0 5rem;}
 .grid-productos{
-  display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));
-  gap:2rem;max-width:860px;margin:2.6rem auto 0;
+  display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));
+  gap:2rem;max-width:1080px;margin:2.6rem auto 0;
 }
 .producto-card{
   background:#fff;border-radius:var(--radio);box-shadow:var(--sombra);
   overflow:hidden;transition:transform .25s,box-shadow .25s;text-align:center;
 }
 .producto-card:hover{transform:translateY(-6px);box-shadow:var(--sombra-fuerte);}
+.producto-card .icono-circulo{margin:1.8rem auto 0;}
+.producto-card h3{margin:1.1rem .8rem .4rem;font-size:.98rem;font-weight:800;letter-spacing:.08em;text-transform:uppercase;color:var(--azul);}
+.producto-card p{margin:0 1.4rem 1.8rem;font-size:.9rem;line-height:1.55;color:var(--gris);}
 .producto-card img{
   width:100%;aspect-ratio:1;object-fit:cover;background:#fff;padding:1.4rem;
 }
@@ -495,17 +501,87 @@ section.productos{padding:3.2rem 0 5rem;}
   <div class="container">
     <div class="grid-productos">
       <figure class="producto-card revelar">
-        <img src="assets/img/disco-corte-albait.png" alt="Disco de corte ALBAIT para inox">
+        <img src="assets/img/disco-corte-albait.png" alt="Discos de corte y desbaste ALBAIT">
         <figcaption>
-          <b>Discos de corte</b>
-          <small>Corte de acero inoxidable y metales · 125 × 1,0 × 22,23 mm</small>
+          <b>Discos de corte y desbaste</b>
         </figcaption>
       </figure>
       <figure class="producto-card revelar">
-        <img src="assets/img/disco-laminas-albait.png" alt="Disco de láminas ALBAIT para pulido">
+        <img src="assets/img/disco-laminas-albait.png" alt="Discos de láminas ALBAIT">
         <figcaption>
           <b>Discos de láminas</b>
-          <small>Pulido y acabado de superficies · Grano zirconio 60–120</small>
+        </figcaption>
+      </figure>
+      <figure class="producto-card revelar">
+        <img src="assets/img/disco-sisal.png" alt="Disco de sisal ALBAIT">
+        <figcaption>
+          <b>Disco de sisal</b>
+        </figcaption>
+      </figure>
+      <figure class="producto-card revelar">
+        <img src="assets/img/discos-sisal-tela.png" alt="Discos de sisal tela ALBAIT">
+        <figcaption>
+          <b>Discos de sisal tela</b>
+        </figcaption>
+      </figure>
+      <figure class="producto-card revelar">
+        <img src="assets/img/discos-sisal-amoladora.png" alt="Discos de sisal para amoladora ALBAIT">
+        <figcaption>
+          <b>Discos de sisal para amoladora</b>
+        </figcaption>
+      </figure>
+      <figure class="producto-card revelar">
+        <img src="assets/img/discos-malla-abrasiva.png" alt="Discos de malla abrasiva ALBAIT">
+        <figcaption>
+          <b>Discos de malla abrasiva</b>
+        </figcaption>
+      </figure>
+      <figure class="producto-card revelar">
+        <img src="assets/img/discos-malla-abrasiva-amoladora.png" alt="Discos de malla abrasiva para amoladora ALBAIT">
+        <figcaption>
+          <b>Discos de malla abrasiva para amoladora</b>
+        </figcaption>
+      </figure>
+      <figure class="producto-card revelar">
+        <img src="assets/img/rollos-malla-abrasiva.png" alt="Rollos de malla abrasiva ALBAIT">
+        <figcaption>
+          <b>Rollos de malla abrasiva</b>
+        </figcaption>
+      </figure>
+      <figure class="producto-card revelar">
+        <img src="assets/img/discos-tela-franela.png" alt="Discos de tela franela ALBAIT">
+        <figcaption>
+          <b>Discos de tela franela</b>
+        </figcaption>
+      </figure>
+      <figure class="producto-card revelar">
+        <img src="assets/img/discos-tela-amoladora.png" alt="Discos de tela para amoladora ALBAIT">
+        <figcaption>
+          <b>Discos de tela para amoladora</b>
+        </figcaption>
+      </figure>
+      <figure class="producto-card revelar">
+        <img src="assets/img/discos-tela-retor.png" alt="Discos de tela retor ALBAIT">
+        <figcaption>
+          <b>Discos de tela retor</b>
+        </figcaption>
+      </figure>
+      <figure class="producto-card revelar">
+        <img src="assets/img/discos-franela.png" alt="Discos de franela ALBAIT">
+        <figcaption>
+          <b>Discos de franela</b>
+        </figcaption>
+      </figure>
+      <figure class="producto-card revelar">
+        <img src="assets/img/discos-tela-variada.png" alt="Discos de tela variada ALBAIT">
+        <figcaption>
+          <b>Discos de tela variada</b>
+        </figcaption>
+      </figure>
+      <figure class="producto-card revelar">
+        <img src="assets/img/discos-tela.png?v=3" alt="Discos de tela ALBAIT">
+        <figcaption>
+          <b>Discos de tela</b>
         </figcaption>
       </figure>
     </div>
@@ -517,6 +593,79 @@ section.productos{padding:3.2rem 0 5rem;}
     </div>
   </div>
 </section>
+
+<!-- ============ GAMAS DE PRODUCTOS ============ -->
+<section class="bloque" id="gamas">
+  <div class="container">
+    <div class="encabezado-seccion revelar">
+      <span class="etiqueta">Nuestras gamas</span>
+      <h2>Una extensa gama de artículos para cada aplicación</h2>
+      <p>Desde discos de fabricación propia hasta producto de las mejores marcas, complementos de seguridad y maquinaria.</p>
+    </div>
+    <div class="grid-productos">
+      <div class="producto-card revelar">
+        <div class="icono-circulo">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="3"/><path d="M12 3v6M12 15v6M3 12h6M15 12h6"/></svg>
+        </div>
+        <h3>Discos de tela</h3>
+        <p>Discos y ruedas de tela para pulido y acabado de superficies metálicas.</p>
+      </div>
+      <div class="producto-card revelar">
+        <div class="icono-circulo">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M8 8c1.5 2.5 1.5 5.5 0 8M12 7c1.8 3 1.8 7 0 10M16 8c1.5 2.5 1.5 5.5 0 8"/></svg>
+        </div>
+        <h3>Discos de camisería</h3>
+        <p>Ruedas de camisería montadas a medida para acabados finos.</p>
+      </div>
+      <div class="producto-card revelar">
+        <div class="icono-circulo">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="2.5"/><path d="M5.5 6.5 10 10M18.5 6.5 14 10M5.5 17.5 10 14M18.5 17.5 14 14"/></svg>
+        </div>
+        <h3>Discos de piel</h3>
+        <p>Discos de piel de gran rendimiento para desbaste y pulido.</p>
+      </div>
+      <div class="producto-card revelar">
+        <div class="icono-circulo">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 3v18M6 5.5c4 4 8 9 12 13M18 5.5c-4 4-8 9-12 13"/></svg>
+        </div>
+        <h3>Discos de cuerda y esparto</h3>
+        <p>Ruedas de cuerda y esparto para trabajos de bruñido y satinado.</p>
+      </div>
+      <div class="producto-card revelar">
+        <div class="icono-circulo">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="8" width="18" height="8" rx="2" transform="rotate(-45 12 12)"/><path d="m9 9 6 6"/></svg>
+        </div>
+        <h3>Lijas y abrasivos recubiertos</h3>
+        <p>Hojas, tiras, rollos y discos de lija de las mejores marcas.</p>
+      </div>
+      <div class="producto-card revelar">
+        <div class="icono-circulo">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2a4 4 0 0 1 4 4c2 .5 3 2 3 4l-2 2-2-2-3 3-3-3-2 2-2-2c0-2 1-3.5 3-4a4 4 0 0 1 4-4z"/><path d="M9 14v3a3 3 0 0 0 6 0v-3"/></svg>
+        </div>
+        <h3>EPIs y seguridad</h3>
+        <p>Guantes, gafas y equipos de protección individual para el taller.</p>
+      </div>
+      <div class="producto-card revelar">
+        <div class="icono-circulo">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m8 2 8 8-8 8-8-8z" transform="translate(4 2)"/></svg>
+        </div>
+        <h3>Pastas y compuestos</h3>
+        <p>Pastas de pulir y compuestos de acabado para cada material.</p>
+      </div>
+      <div class="producto-card revelar">
+        <div class="icono-circulo">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="7" width="20" height="10" rx="2"/><circle cx="7" cy="12" r="2"/><path d="M13 10v4M17 10v4"/></svg>
+        </div>
+        <h3>Maquinaria</h3>
+        <p>Máquinas y herramientas Fein para el pulido y el acabado profesional.</p>
+      </div>
+    </div>
+    <div class="cat-cta revelar">
+      <a class="btn btn-outline" href="index.html#contacto">Pedir presupuesto</a>
+    </div>
+  </div>
+</section>
+
 
 <!-- ============ PIE ============ -->
 <footer class="pie">
