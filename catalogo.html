@@ -244,10 +244,7 @@ section.bloque.fondo-gris{background:var(--gris-fondo);}
 .klingspor-logo{
   display:flex;align-items:center;gap:.55rem;
 }
-.klingspor-logo img{height:64px;width:auto;}
-.klingspor-logo b{
-  font-size:1.28rem;font-weight:700;letter-spacing:.03em;color:#1d1d1b;
-}
+.klingspor-logo img{height:150px;width:auto;}
 .nota-marcas{
   text-align:center;margin-top:2.2rem;
 }
@@ -424,6 +421,12 @@ section#gamas{padding-top:2.6rem;}
 }
 #gamas .grid-productos{
   grid-template-columns:repeat(6,1fr);max-width:1280px;
+}
+@media (max-width:960px){
+  #gamas .grid-productos{grid-template-columns:repeat(3,1fr);gap:1.2rem;}
+}
+@media (max-width:700px){
+  #gamas .grid-productos{grid-template-columns:repeat(2,1fr);gap:1rem;}
 }
 .producto-card{
   background:#fff;border-radius:var(--radio);box-shadow:var(--sombra);
@@ -737,7 +740,6 @@ section#gamas{padding-top:2.6rem;}
       <div class="marca-card revelar">
         <span class="klingspor-logo">
           <img src="assets/img/logo-klingspor.png" alt="Klingspor">
-          <b>KLINGSPOR</b>
         </span>
       </div>
       <div class="marca-card revelar">
