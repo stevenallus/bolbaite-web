@@ -1,0 +1,364 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Política de privacidad — Grupo Bolbaite | Industrial Bolbaite, S.L.</title>
+<meta name="description" content="Política de privacidad de Grupo Bolbaite (Industrial Bolbaite, S.L.): responsable, finalidades, base jurídica, conservación, destinatarios y derechos en materia de protección de datos.">
+<link rel="icon" type="image/png" href="assets/img/logo-marca-bolbaite.png">
+<style>
+/* ============================================================
+   GRUPO BOLBAITE — Páginas legales
+   Colores de marca: azul #1a1893 · gris #555351 · rojo #a70013
+   ============================================================ */
+:root{
+  --azul:#1a1893;
+  --azul-oscuro:#12117a;
+  --azul-suave:#efeffa;
+  --rojo:#a70013;
+  --gris:#555351;
+  --gris-claro:#8c8c8c;
+  --gris-fondo:#f4f4f4;
+  --blanco:#ffffff;
+  --radio:6px;
+  --sombra:0 6px 24px rgba(26,24,147,.10);
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+html{scroll-behavior:smooth;}
+body{
+  font-family:'Arimo',Arial,Helvetica,sans-serif;
+  color:var(--gris);
+  background:var(--blanco);
+  line-height:1.65;
+}
+a{text-decoration:none;color:inherit;}
+img{max-width:100%;display:block;}
+.container{width:min(1180px,92%);margin:0 auto;}
+
+/* ---------- Topbar ---------- */
+.topbar{
+  background:var(--azul);
+  color:#c9c8ee;
+  font-size:.8rem;
+  padding:.45rem 0;
+}
+.topbar .container{display:flex;justify-content:center;gap:1.6rem;flex-wrap:wrap;text-align:center;}
+.topbar a{display:inline-flex;align-items:center;gap:.4rem;transition:color .2s;}
+.topbar a:hover{color:#fff;}
+.topbar svg{width:13px;height:13px;flex:none;}
+
+/* ---------- Cabecera ---------- */
+header.cabecera{
+  background:var(--blanco);
+  border-bottom:1px solid #e8e8e8;
+  position:sticky;top:0;z-index:1000;
+}
+.cabecera-inner{
+  display:flex;align-items:center;justify-content:space-between;
+  padding:.9rem 0;gap:1rem;flex-wrap:wrap;
+}
+.marca{display:flex;align-items:center;gap:1rem;}
+.marca img{height:52px;width:auto;}
+.marca-texto{display:flex;flex-direction:column;line-height:1.15;}
+.marca-texto strong{
+  font-size:1.35rem;font-weight:800;letter-spacing:.02em;
+  color:var(--azul);white-space:nowrap;
+}
+.marca-texto small{
+  font-size:.68rem;font-weight:600;letter-spacing:.14em;
+  text-transform:uppercase;color:var(--azul-oscuro);white-space:nowrap;
+}
+.nav-principal ul{list-style:none;display:flex;gap:.3rem;flex-wrap:wrap;}
+.nav-principal a{
+  display:block;color:var(--azul);font-size:.83rem;font-weight:700;
+  letter-spacing:.09em;text-transform:uppercase;
+  padding:.65rem 1.15rem;border-radius:var(--radio);
+  transition:background .2s,color .2s;
+}
+.nav-principal a:hover{background:var(--azul);color:#fff;}
+.burger{
+  display:none;background:none;border:1.5px solid var(--azul);
+  border-radius:var(--radio);padding:.45rem .6rem;cursor:pointer;
+}
+.burger svg{width:22px;height:22px;stroke:var(--azul);}
+
+/* ---------- Contenido legal ---------- */
+.legal{padding:3.2rem 0 4rem;}
+.legal article{max-width:860px;margin:0 auto;}
+.legal h1{
+  color:var(--azul);font-size:clamp(1.7rem,3.4vw,2.3rem);
+  letter-spacing:-.01em;margin-bottom:.4rem;
+}
+.fecha-actualizacion{font-size:.85rem;color:var(--gris-claro);margin-bottom:2.2rem;}
+.legal h2{
+  color:var(--azul);font-size:1.15rem;
+  margin:2.2rem 0 .7rem;padding-top:1.4rem;
+  border-top:1px solid #e6e6f2;
+}
+.legal h2:first-of-type{border-top:none;padding-top:0;margin-top:0;}
+.legal p{margin-bottom:.85rem;}
+.legal ul{margin:0 0 .85rem 1.25rem;}
+.legal li{margin-bottom:.4rem;}
+.legal a.enlace{color:var(--azul);text-decoration:underline;}
+.legal a.enlace:hover{color:var(--azul-oscuro);}
+.datos-titular{
+  display:grid;grid-template-columns:190px 1fr;gap:.4rem 1.2rem;
+  background:var(--azul-suave);border-radius:var(--radio);
+  padding:1.3rem 1.4rem;margin:0 0 1rem;
+}
+.datos-titular dt{font-weight:700;color:var(--azul);}
+.datos-titular dd{margin:0;}
+.datos-titular a{color:var(--azul);text-decoration:underline;}
+.pendiente{
+  background:#fff4f5;color:var(--rojo);font-weight:700;
+  padding:0 .3rem;border-radius:4px;
+}
+.legal strong{color:var(--gris);}
+
+/* ---------- Pie ---------- */
+footer.pie{background:var(--azul);color:#fff;}
+.pie-superior{
+  display:grid;grid-template-columns:1.3fr 1fr 1fr;gap:2.5rem;
+  padding:3.2rem 0;
+}
+.pie-superior p{font-size:.88rem;color:#c9c8ee;max-width:320px;}
+.pie-marca{display:flex;align-items:center;gap:.9rem;margin-bottom:1rem;}
+.pie-logo-chip{
+  display:inline-flex;align-items:center;background:#fff;
+  border-radius:10px;padding:.45rem .6rem;
+}
+.pie-logo-chip img{height:44px;width:auto;display:block;}
+.pie-marca-texto{display:flex;flex-direction:column;line-height:1.15;}
+.pie-marca-texto strong{
+  font-size:1.15rem;font-weight:800;letter-spacing:.02em;color:#fff;white-space:nowrap;
+}
+.pie-marca-texto small{
+  font-size:.62rem;font-weight:600;letter-spacing:.14em;
+  text-transform:uppercase;color:#c9c8ee;white-space:nowrap;
+}
+.pie-col h4{
+  font-size:.78rem;font-weight:700;letter-spacing:.18em;
+  text-transform:uppercase;margin-bottom:1.1rem;color:#fff;
+}
+.pie-col ul{list-style:none;}
+.pie-col li{margin-bottom:.55rem;}
+.pie-col a,.pie-col span{font-size:.88rem;color:#c9c8ee;transition:color .2s;}
+.pie-col a:hover{color:#fff;text-decoration:underline;}
+.pie-inferior{
+  border-top:1px solid rgba(255,255,255,.18);
+  padding:1.2rem 0;display:flex;justify-content:space-between;
+  align-items:center;gap:1rem;flex-wrap:wrap;
+  font-size:.76rem;color:#a8a7dd;
+}
+.pie-inferior .legales{display:flex;gap:1.4rem;flex-wrap:wrap;}
+.pie-inferior a:hover{color:#fff;}
+.pie-inferior .legales a[aria-current="page"]{color:#fff;font-weight:700;text-decoration:underline;}
+
+/* ---------- Responsive ---------- */
+@media (max-width:700px){
+  .burger{display:block;}
+  .nav-principal{display:none;width:100%;}
+  .nav-principal.abierto{display:block;}
+  .nav-principal ul{flex-direction:column;gap:.25rem;}
+  .nav-principal a{padding:.8rem 1rem;text-align:center;}
+  .marca img{height:42px;}
+  .marca-texto strong{font-size:1.05rem;}
+  .marca-texto small{font-size:.58rem;letter-spacing:.1em;}
+  .pie-superior{grid-template-columns:1fr;gap:1.8rem;padding:2.4rem 0;}
+  .pie-inferior{justify-content:center;text-align:center;}
+  .datos-titular{grid-template-columns:1fr;gap:.15rem;}
+  .datos-titular dt{margin-top:.6rem;}
+}
+</style>
+</head>
+<body>
+
+<!-- ============ TOPBAR ============ -->
+<div class="topbar">
+  <div class="container">
+    <a href="tel:+34962223111">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.13.96.36 1.9.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.91.34 1.85.57 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+      962 223 111
+    </a>
+    <a href="mailto:gestion@industrialbolbaite.es">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m22 7-10 6L2 7"/></svg>
+      gestion@industrialbolbaite.es
+    </a>
+    <a href="https://maps.app.goo.gl/PhKrFKdX9mVfKCm6A" target="_blank" rel="noopener">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M2 12h20M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
+      Bolbaite (Valencia), España
+    </a>
+  </div>
+</div>
+
+<!-- ============ CABECERA ============ -->
+<header class="cabecera">
+  <div class="container cabecera-inner">
+    <a class="marca" href="index.html">
+      <img src="assets/img/logo-marca-bolbaite.png" alt="Logo Grupo Bolbaite">
+      <span class="marca-texto">
+        <strong>GRUPO BOLBAITE</strong>
+        <small>Industrial Bolbaite, S.L. · Suinbol, S.L.</small>
+      </span>
+    </a>
+    <nav class="nav-principal" id="navPrincipal" aria-label="Navegación principal">
+      <ul>
+        <li><a href="index.html">Inicio</a></li>
+        <li><a href="catalogo.html">Catálogo</a></li>
+        <li><a href="grupo-bolbaite.html">Grupo Bolbaite</a></li>
+        <li><a href="index.html#contacto">Contacto</a></li>
+      </ul>
+    </nav>
+    <button class="burger" id="btnMenu" aria-label="Abrir menú">
+      <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round"><path d="M3 6h18M3 12h18M3 18h18"/></svg>
+    </button>
+  </div>
+</header>
+
+<!-- ============ POLÍTICA DE PRIVACIDAD ============ -->
+<main class="legal">
+  <article>
+    <h1>Política de privacidad</h1>
+    <p class="fecha-actualizacion">Última actualización: octubre de 2026</p>
+
+    <p>Industrial Bolbaite, S.L. respeta su privacidad y trata los datos personales que nos facilita conforme al <strong>Reglamento (UE) 2016/679, General de Protección de Datos (RGPD)</strong> y a la <strong>Ley Orgánica 3/2018, de Protección de Datos Personales y garantía de los derechos digitales (LOPDGDD)</strong>. A continuación le informamos de forma transparente sobre cómo tratamos sus datos.</p>
+
+    <h2>1. Responsable del tratamiento</h2>
+    <dl class="datos-titular">
+      <dt>Responsable</dt>
+      <dd><strong>INDUSTRIAL BOLBAITE FÁBRICA DE ARTÍCULOS PARA EL PULIDO, S.L.</strong> («Industrial Bolbaite, S.L.»)</dd>
+      <dt>NIF</dt>
+      <dd>B-96446646</dd>
+      <dt>Domicilio</dt>
+      <dd>Partida de Las Eras S/N — 46822 Bolbaite (Valencia), España</dd>
+      <dt>Correo electrónico</dt>
+      <dd><a href="mailto:gestion@industrialbolbaite.es">gestion@industrialbolbaite.es</a></dd>
+      <dt>Teléfono</dt>
+      <dd><a href="tel:+34962223111">(+34) 962 223 111</a></dd>
+    </dl>
+    <p><span class="pendiente">[COMPLETAR: si Suinbol, S.L. actúa como corresponsable o responsable de algún tratamiento, indicarlo aquí con su NIF]</span></p>
+
+    <h2>2. ¿Qué datos personales tratamos?</h2>
+    <p>Solo tratamos los datos que usted nos facilita voluntariamente a través del <strong>formulario de contacto</strong> o por los medios de contacto publicados (teléfono y correo electrónico):</p>
+    <ul>
+      <li>Nombre y apellidos</li>
+      <li>Empresa (opcional)</li>
+      <li>Número de teléfono</li>
+      <li>Dirección de correo electrónico</li>
+      <li>Producto o servicio de interés y contenido del mensaje</li>
+    </ul>
+    <p><strong>No tratamos datos de navegación</strong> con fines analíticos ni publicitarios: el sitio web no utiliza herramientas de analítica web ni instala cookies propias. Para más información, consulte la <a class="enlace" href="politica-cookies.html">Política de Cookies</a>.</p>
+
+    <h2>3. ¿Con qué finalidad y con qué base jurídica tratamos sus datos?</h2>
+    <table style="width:100%;border-collapse:collapse;font-size:.93rem;margin-bottom:.85rem;">
+      <thead>
+        <tr>
+          <th style="text-align:left;border-bottom:2px solid var(--azul);padding:.5rem .6rem .5rem 0;">Finalidad</th>
+          <th style="text-align:left;border-bottom:2px solid var(--azul);padding:.5rem 0;">Base jurídica</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td style="border-bottom:1px solid #e6e6f2;padding:.6rem .6rem .6rem 0;vertical-align:top;">Atender las consultas, solicitudes de información o presupuestos que nos remita a través del formulario de contacto, teléfono o correo electrónico.</td>
+          <td style="border-bottom:1px solid #e6e6f2;padding:.6rem 0;vertical-align:top;">Su <strong>consentimiento</strong>, que nos otorga al enviar el formulario o contactarnos (art. 6.1.a RGPD), y la aplicación de <strong>medidas precontractuales</strong> solicitadas por usted (art. 6.1.b RGPD).</td>
+        </tr>
+        <tr>
+          <td style="padding:.6rem .6rem .6rem 0;vertical-align:top;">Mantener la relación comercial derivada de sus pedidos o encargos, así como cumplir las obligaciones legales, contables y fiscales que correspondan.</td>
+          <td style="padding:.6rem 0;vertical-align:top;">Ejecución de contrato y <strong>obligación legal</strong> (arts. 6.1.b y 6.1.c RGPD).</td>
+        </tr>
+      </tbody>
+    </table>
+    <p>No se adoptan decisiones automatizadas ni se elaboran perfiles a partir de sus datos.</p>
+
+    <h2>4. ¿Durante cuánto tiempo conservamos sus datos?</h2>
+    <p>Conservaremos sus datos durante el tiempo necesario para atender su consulta y gestionar la relación que, en su caso, se derive de la misma. Posteriormente, los conservaremos bloqueados —sin más uso que la responsabilidad— durante los plazos exigidos por la normativa aplicable, en particular la fiscal y mercantil, y hasta que prescriban las posibles responsabilidades derivadas del tratamiento.</p>
+
+    <h2>5. Destinatarios y encargados del tratamiento</h2>
+    <p><strong>No cedemos sus datos a terceros</strong> salvo obligación legal. Sus datos se reciben y almacenan en los sistemas de correo electrónico y de gestión del responsable.</p>
+    <p>Ciertos proveedores prestan servicios que implican acceso a sistemas que pueden contener datos personales (por ejemplo, el proveedor de alojamiento web y el proveedor de correo electrónico). Estos actúan como <strong>encargados del tratamiento</strong>, con contrato conforme al art. 28 RGPD. <span class="pendiente">[COMPLETAR: nombre del proveedor de alojamiento web / correo, una vez contratado el hosting definitivo]</span></p>
+    <p>El mapa de ubicación se sirve mediante el servicio Google Maps de Google Ireland Limited, que <strong>solo se carga si usted pulsa expresamente «Cargar mapa»</strong>. Al hacerlo, Google puede tratar su dirección IP y recabar información según sus propias políticas. Consulte los detalles en la <a class="enlace" href="politica-cookies.html">Política de Cookies</a>.</p>
+
+    <h2>6. Sus derechos</h2>
+    <p>Usted puede ejercer en cualquier momento y de forma gratuita los siguientes derechos:</p>
+    <ul>
+      <li><strong>Acceso</strong> a sus datos personales y a la información sobre su tratamiento.</li>
+      <li><strong>Rectificación</strong> de los datos inexactos o incompletos.</li>
+      <li><strong>Supresión</strong> («derecho al olvido») cuando ya no sean necesarios.</li>
+      <li><strong>Oposición</strong> al tratamiento en los supuestos previstos por la ley.</li>
+      <li><strong>Limitación</strong> del tratamiento mientras se verifica una contradicción u oposición.</li>
+      <li><strong>Portabilidad</strong> de los datos en un formato estructurado, de uso común y lectura mecánica.</li>
+      <li><strong>Retirada del consentimiento</strong> prestado, sin que ello afecte a la licitud de los tratamientos previos.</li>
+    </ul>
+    <p>Para ejercerlos, envíe una comunicación escrita a la dirección postal <em>Partida de Las Eras S/N, 46822 Bolbaite (Valencia)</em> o al correo electrónico <a class="enlace" href="mailto:gestion@industrialbolbaite.es">gestion@industrialbolbaite.es</a>, adjuntando copia de un documento que acredite su identidad.</p>
+    <p>Si considera que no hemos atendido correctamente sus derechos, puede presentar una reclamación ante la <strong>Agencia Española de Protección de Datos</strong> (C/ Jorge Juan, 6 — 28001 Madrid; <a class="enlace" href="https://www.aepd.es" target="_blank" rel="noopener">www.aepd.es</a>).</p>
+
+    <h2>7. Seguridad de los datos</h2>
+    <p>Aplicamos medidas técnicas y organizativas apropiadas para proteger sus datos personales contra el acceso no autorizado, la pérdida o la alteración, acordes con el riesgo y conforme al RGPD y a las guías de la Agencia Española de Protección de Datos.</p>
+
+    <h2>8. Datos de menores</h2>
+    <p>Este sitio web está dirigido a profesionales y no está concebido para la captación de datos de menores de edad. No recogemos intencionadamente datos de menores de 14 años.</p>
+
+    <h2>9. Modificaciones de esta política</h2>
+    <p>Podemos actualizar esta política para adaptarla a cambios normativos o en los tratamientos. Cualquier modificación se publicará en esta misma página, indicando la fecha de la última actualización en su encabezado.</p>
+  </article>
+</main>
+
+<!-- ============ PIE ============ -->
+<footer class="pie">
+  <div class="container pie-superior">
+    <div>
+      <span class="pie-marca">
+        <span class="pie-logo-chip">
+          <img src="assets/img/logo-marca-bolbaite.png" alt="Logo Grupo Bolbaite">
+        </span>
+        <span class="pie-marca-texto">
+          <strong>GRUPO BOLBAITE</strong>
+          <small>Industrial Bolbaite, S.L. · Suinbol, S.L.</small>
+        </span>
+      </span>
+      <p>Industrial Bolbaite, fábrica de artículos para el pulido, S.L. Fabricación y distribución de abrasivos desde 1970.</p>
+    </div>
+    <div class="pie-col">
+      <h4>Navegación</h4>
+      <ul>
+        <li><a href="index.html">Inicio</a></li>
+        <li><a href="catalogo.html">Catálogo</a></li>
+        <li><a href="grupo-bolbaite.html">Grupo Bolbaite</a></li>
+        <li><a href="index.html#contacto">Contacto</a></li>
+      </ul>
+    </div>
+    <div class="pie-col">
+      <h4>Contacto</h4>
+      <ul>
+        <li><span>Partida de Las Eras S/N</span></li>
+        <li><span>46822 Bolbaite (Valencia), España</span></li>
+        <li><a href="tel:+34962223111">962 223 111</a></li>
+        <li><a href="mailto:gestion@industrialbolbaite.es">gestion@industrialbolbaite.es</a></li>
+      </ul>
+    </div>
+  </div>
+  <div class="pie-inferior">
+    <div class="container" style="display:flex;justify-content:space-between;align-items:center;gap:1rem;flex-wrap:wrap;">
+      <span>© 2026 Industrial Bolbaite, S.L. — Abrasivos desde 1970</span>
+      <div class="legales">
+        <a href="aviso-legal.html">Aviso legal</a>
+        <a href="politica-privacidad.html" aria-current="page">Política de privacidad</a>
+        <a href="politica-cookies.html">Política de cookies</a>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<script>
+// Menú móvil
+var btnMenu = document.getElementById('btnMenu');
+var navPrincipal = document.getElementById('navPrincipal');
+if (btnMenu && navPrincipal) {
+  btnMenu.addEventListener('click', function () { navPrincipal.classList.toggle('abierto'); });
+  navPrincipal.querySelectorAll('a').forEach(function (a) {
+    a.addEventListener('click', function () { navPrincipal.classList.remove('abierto'); });
+  });
+}
+</script>
+</body>
+</html>

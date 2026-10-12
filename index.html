@@ -6,9 +6,7 @@
 <title>Grupo Bolbaite — Abrasivos desde 1970 | Industrial Bolbaite, S.L.</title>
 <meta name="description" content="Grupo Bolbaite: fabricación propia y distribución oficial de abrasivos 3M, sia, Klingspor, Fein, VSM y PFERD Tools. Discos de corte y pulido desde 1970. Servicio, calidad y cercanía.">
 <link rel="icon" type="image/png" href="assets/img/logo-marca-bolbaite.png">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Arimo:ital,wght@0,400;0,500;0,600;0,700;1,400&display=swap" rel="stylesheet">
+<link href="assets/fonts/arimo.css" rel="stylesheet">
 <style>
 /* ============================================================
    GRUPO BOLBAITE — Maqueta web
@@ -314,6 +312,25 @@ section.lema cite{
   display:block;width:100%;max-width:340px;height:220px;margin:0 auto;border:0;
   border-radius:var(--radio);box-shadow:var(--sombra);
 }
+/* El mapa solo se carga si el usuario pulsa "Cargar mapa" (ver política de cookies) */
+.mapa-contacto.sin-consentimiento .mapa-enlace{display:none;}
+.mapa-placeholder{
+  width:100%;max-width:340px;height:220px;margin:0 auto;
+  border-radius:var(--radio);box-shadow:var(--sombra);
+  background:var(--azul-suave);
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  gap:.45rem;padding:1rem;text-align:center;
+}
+.mapa-placeholder img{height:38px;width:auto;opacity:.85;}
+.mapa-placeholder p{font-size:.8rem;color:var(--gris);line-height:1.35;}
+.mapa-placeholder .btn-cargar-mapa{
+  font-family:inherit;font-size:.76rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;
+  background:var(--azul);color:#fff;border:none;border-radius:var(--radio);
+  padding:.6rem 1.3rem;cursor:pointer;transition:background .2s;
+}
+.mapa-placeholder .btn-cargar-mapa:hover{background:var(--azul-oscuro);}
+.mapa-placeholder small{font-size:.66rem;color:var(--gris-claro);max-width:280px;line-height:1.4;}
+.mapa-placeholder small a{color:var(--azul);text-decoration:underline;}
 .form-contacto{
   background:#fff;border-radius:var(--radio);
   box-shadow:var(--sombra);padding:2.4rem;
@@ -646,14 +663,14 @@ footer.pie{background:var(--azul);color:#fff;}
           <span class="val">Lunes a Jueves · 9:00 – 17:00 · Viernes · 9:00 – 14:00</span>
         </div>
       </div>
-      <div class="mapa-contacto">
+      <div class="mapa-contacto sin-consentimiento">
         <a class="mapa-enlace" href="https://maps.app.goo.gl/PhKrFKdX9mVfKCm6A" target="_blank" rel="noopener" aria-label="Abrir ubicación de Industrial Bolbaite en Google Maps"></a>
-        <iframe
-          src="https://www.google.com/maps?q=39.0655518%2C-0.6775448&output=embed"
-          title="Ubicación de Grupo Bolbaite en Bolbaite (Valencia)"
-          loading="lazy"
-          allowfullscreen
-          referrerpolicy="no-referrer-when-downgrade"></iframe>
+        <div class="mapa-placeholder" data-mapa-src="https://www.google.com/maps?q=39.0655518%2C-0.6775448&output=embed">
+          <img src="assets/img/logo-marca-bolbaite.png" alt="">
+          <p><strong>Ubicación</strong><br>Partida de Las Eras S/N<br>46822 Bolbaite (Valencia)</p>
+          <button type="button" class="btn-cargar-mapa">Cargar mapa</button>
+          <small>Al pulsar se cargará contenido de Google Maps. Más información en la <a href="politica-cookies.html">política de cookies</a>.</small>
+        </div>
       </div>
     </div>
     <form class="form-contacto revelar" id="formContacto" action="https://formsubmit.co/stevenscacc@gmail.com" method="POST">
@@ -691,7 +708,7 @@ footer.pie{background:var(--azul);color:#fff;}
           <span id="btnTexto">Enviar consulta</span>
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="m22 2-7 20-4-9-9-4 20-7z"/></svg>
         </button>
-        <p class="aviso-form">Al enviar acepta nuestra <a href="#" style="color:var(--azul);text-decoration:underline;">política de privacidad</a>.</p>
+        <p class="aviso-form">Responsable: <strong>Industrial Bolbaite, S.L.</strong> · Finalidad: atender su consulta · Legitimación: su consentimiento · Conservación: el tiempo necesario para gestionarla · No se ceden datos a terceros. Puede ejercer sus derechos de acceso, rectificación, supresión, oposición y limitación escribiendo a gestion@industrialbolbaite.es. Más información en la <a href="politica-privacidad.html" style="color:var(--azul);text-decoration:underline;">Política de privacidad</a>.</p>
         <p class="form-estado" id="formEstado" role="status" aria-live="polite" hidden></p>
       </div>
       <div class="form-exito" id="formExito" hidden>
@@ -744,9 +761,9 @@ footer.pie{background:var(--azul);color:#fff;}
     <div class="container" style="display:flex;justify-content:space-between;align-items:center;gap:1rem;flex-wrap:wrap;">
       <span>© 2026 Industrial Bolbaite, S.L. — Abrasivos desde 1970</span>
       <div class="legales">
-        <a href="#">Aviso legal</a>
-        <a href="#">Política de privacidad</a>
-        <a href="#">Política de cookies</a>
+        <a href="aviso-legal.html">Aviso legal</a>
+        <a href="politica-privacidad.html">Política de privacidad</a>
+        <a href="politica-cookies.html">Política de cookies</a>
       </div>
     </div>
   </div>
@@ -765,41 +782,21 @@ const observador = new IntersectionObserver(entradas => {
 }, { threshold: .14 });
 document.querySelectorAll('.revelar').forEach(el => observador.observe(el));
 
-// Envío del formulario de contacto sin salir de la página (FormSubmit reenvía la consulta por email)
-const formContacto = document.getElementById('formContacto');
-formContacto.addEventListener('submit', async (e) => {
-  e.preventDefault();
-  const boton = formContacto.querySelector('button[type="submit"]');
-  const btnTexto = document.getElementById('btnTexto');
-  const formEstado = document.getElementById('formEstado');
-  boton.disabled = true;
-  btnTexto.textContent = 'Enviando…';
-  formEstado.hidden = true;
-  try {
-    const respuesta = await fetch('https://formsubmit.co/ajax/stevenscacc@gmail.com', {
-      method: 'POST',
-      body: new FormData(formContacto),
-      headers: { 'Accept': 'application/json' }
-    });
-    if (!respuesta.ok) throw new Error('Error en el envío');
-    const resultado = await respuesta.json();
-    if (String(resultado.success) !== 'true') throw new Error('Error en el envío');
-    document.getElementById('formCuerpo').hidden = true;
-    document.getElementById('formExito').hidden = false;
-  } catch {
-    formEstado.textContent = 'No se pudo enviar la consulta. Compruebe su conexión e inténtelo de nuevo, o llámenos al 962 223 111.';
-    formEstado.hidden = false;
-    boton.disabled = false;
-    btnTexto.textContent = 'Enviar consulta';
-  }
+document.getElementById('btnTexto').textContent = 'Enviar consulta';
 });
-document.getElementById('btnNuevoEnvio').addEventListener('click', () => {
-  formContacto.reset();
-  document.getElementById('formExito').hidden = true;
-  document.getElementById('formCuerpo').hidden = false;
-  const boton = formContacto.querySelector('button[type="submit"]');
-  boton.disabled = false;
-  document.getElementById('btnTexto').textContent = 'Enviar consulta';
+
+// Mapa de Google: solo se carga al pulsar "Cargar mapa" (ver política de cookies)
+document.querySelectorAll('.mapa-placeholder').forEach(function (marcador) {
+  marcador.querySelector('.btn-cargar-mapa').addEventListener('click', function () {
+    var contenedor = marcador.closest('.mapa-contacto');
+    var iframe = document.createElement('iframe');
+    iframe.src = marcador.dataset.mapaSrc;
+    iframe.title = 'Ubicación de Grupo Bolbaite en Bolbaite (Valencia)';
+    iframe.setAttribute('allowfullscreen', '');
+    iframe.setAttribute('referrerpolicy', 'no-referrer-when-downgrade');
+    marcador.replaceWith(iframe);
+    if (contenedor) contenedor.classList.remove('sin-consentimiento');
+  });
 });
 </script>
 </body>
