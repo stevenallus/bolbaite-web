@@ -782,7 +782,41 @@ const observador = new IntersectionObserver(entradas => {
 }, { threshold: .14 });
 document.querySelectorAll('.revelar').forEach(el => observador.observe(el));
 
-document.getElementById('btnTexto').textContent = 'Enviar consulta';
+// Envío del formulario de contacto sin salir de la página (FormSubmit reenvía la consulta por email)
+const formContacto = document.getElementById('formContacto');
+formContacto.addEventListener('submit', async (e) => {
+  e.preventDefault();
+  const boton = formContacto.querySelector('button[type="submit"]');
+  const btnTexto = document.getElementById('btnTexto');
+  const formEstado = document.getElementById('formEstado');
+  boton.disabled = true;
+  btnTexto.textContent = 'Enviando…';
+  formEstado.hidden = true;
+  try {
+    const respuesta = await fetch('https://formsubmit.co/ajax/stevenscacc@gmail.com', {
+      method: 'POST',
+      body: new FormData(formContacto),
+      headers: { 'Accept': 'application/json' }
+    });
+    if (!respuesta.ok) throw new Error('Error en el envío');
+    const resultado = await respuesta.json();
+    if (String(resultado.success) !== 'true') throw new Error('Error en el envío');
+    document.getElementById('formCuerpo').hidden = true;
+    document.getElementById('formExito').hidden = false;
+  } catch {
+    formEstado.textContent = 'No se pudo enviar la consulta. Compruebe su conexión e inténtelo de nuevo, o llámenos al 962 223 111.';
+    formEstado.hidden = false;
+    boton.disabled = false;
+    btnTexto.textContent = 'Enviar consulta';
+  }
+});
+document.getElementById('btnNuevoEnvio').addEventListener('click', () => {
+  formContacto.reset();
+  document.getElementById('formExito').hidden = true;
+  document.getElementById('formCuerpo').hidden = false;
+  const boton = formContacto.querySelector('button[type="submit"]');
+  boton.disabled = false;
+  document.getElementById('btnTexto').textContent = 'Enviar consulta';
 });
 
 // Mapa de Google: solo se carga al pulsar "Cargar mapa" (ver política de cookies)
@@ -799,5 +833,6 @@ document.querySelectorAll('.mapa-placeholder').forEach(function (marcador) {
   });
 });
 </script>
+<script src="assets/js/whatsapp-flotante.js" defer></script>
 </body>
 </html>
