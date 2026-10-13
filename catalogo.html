@@ -439,6 +439,7 @@ section#gamas{padding-top:2.6rem;}
 .producto-card img{
   width:100%;aspect-ratio:1;object-fit:cover;background:#fff;padding:1.4rem;
 }
+.producto-card img.foto-grande{padding:.7rem;}
 .producto-card figcaption{
   border-top:2px solid var(--azul);padding:1rem .8rem;
 }
@@ -474,10 +475,13 @@ section#gamas{padding-top:2.6rem;}
 .lb-media{display:flex;align-items:center;justify-content:center;overflow:hidden;}
 .lb-contenido img,
 .lb-contenido .icono-circulo{
-  width:min(calc(94vh - 130px), 100%);
-  height:auto;
-  aspect-ratio:1;object-fit:contain;background:#fff;
+  display:block;
+  max-width:100%;
+  max-height:calc(94vh - 130px);
+  width:auto;height:auto;
+  object-fit:contain;background:#fff;
   padding:1.2rem;
+  margin:0 auto;
 }
 .lb-contenido .icono-circulo{
   width:min(320px,60vw);height:min(320px,60vw);
@@ -593,7 +597,7 @@ body.lb-bloqueado{overflow:hidden;}
         </figcaption>
       </figure>
       <figure class="producto-card revelar">
-        <img src="assets/img/disco-laminas-albait.png" alt="Fibra comprimida ALBAIT">
+        <img src="assets/img/fibra-comprimida-albait.jpg" alt="Fibra comprimida ALBAIT">
         <figcaption>
           <b>Fibra comprimida</b>
         </figcaption>
@@ -696,81 +700,75 @@ body.lb-bloqueado{overflow:hidden;}
     </div>
     <div class="grid-productos">
       <div class="producto-card revelar">
-        <img src="assets/img/discos-sisal-trenzado.png" alt="Discos de sisal trenzado ALBAIT">
+        <img class="foto-grande" src="assets/img/gama-sisal-trenzado.jpg" alt="Discos de sisal trenzado ALBAIT">
         <h3>Discos de sisal trenzado</h3>
       </div>
       <div class="producto-card revelar">
-        <img src="assets/img/discos-tela-ventilada.png" alt="Discos de tela ventilada ALBAIT">
+        <img class="foto-grande" src="assets/img/gama-tela-ventilada.jpg" alt="Discos de tela ventilada ALBAIT">
         <h3>Discos de tela ventilada</h3>
       </div>
       <div class="producto-card revelar">
-        <img src="assets/img/discos-laminas.png" alt="Discos de láminas ALBAIT">
+        <img class="foto-grande" src="assets/img/gama-laminas.jpg" alt="Discos de láminas ALBAIT">
         <h3>Discos de láminas</h3>
       </div>
       <div class="producto-card revelar">
-        <img src="assets/img/discos-malla-abrasiva-gama.png" alt="Discos de malla abrasiva ALBAIT">
+        <img class="foto-grande" src="assets/img/gama-malla-abrasiva.jpg" alt="Discos de malla abrasiva ALBAIT">
         <h3>Discos de malla abrasiva</h3>
       </div>
       <div class="producto-card revelar">
-        <img src="assets/img/productos-quimicos.png" alt="Productos químicos para la industria ALBAIT">
+        <img class="foto-grande" src="assets/img/gama-productos-quimicos.jpg" alt="Productos químicos para la industria ALBAIT">
         <h3>Productos químicos para la industria</h3>
       </div>
       <div class="producto-card revelar">
-        <div class="icono-circulo">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 3v18M6 5.5c4 4 8 9 12 13M18 5.5c-4 4-8 9-12 13"/></svg>
-        </div>
+        <img class="foto-grande" src="assets/img/gama-fibra-comprimida.jpg" alt="Discos de fibra comprimida ALBAIT">
         <h3>Discos de fibra comprimida</h3>
       </div>
       <div class="producto-card revelar">
-        <img src="assets/img/discos-alambre.png" alt="Discos de alambre ALBAIT">
+        <img class="foto-grande" src="assets/img/gama-discos-alambre.jpg" alt="Discos de alambre ALBAIT">
         <h3>Discos de alambre</h3>
       </div>
       <div class="producto-card revelar">
-        <div class="icono-circulo">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="7" width="20" height="10" rx="2"/><circle cx="7" cy="12" r="2"/><path d="M13 10v4M17 10v4"/></svg>
-        </div>
+        <img class="foto-grande" src="assets/img/gama-maquinaria.jpg" alt="Todo tipo de maquinaria ALBAIT">
         <h3>Todo tipo de maquinaria</h3>
       </div>
       <div class="producto-card revelar">
-        <img src="assets/img/platos-ejes-centradores.png" alt="Platos y ejes centradores ALBAIT">
+        <img class="foto-grande" src="assets/img/gama-platos-ejes.jpg" alt="Platos y ejes centradores ALBAIT">
         <h3>Platos y ejes centradores</h3>
       </div>
       <div class="producto-card revelar">
-        <img src="assets/img/discos-corte-desbaste.png" alt="Discos de corte y desbaste ALBAIT">
+        <img class="foto-grande" src="assets/img/gama-corte-desbaste.jpg" alt="Discos de corte y desbaste ALBAIT">
         <h3>Discos de corte y desbaste</h3>
       </div>
       <div class="producto-card revelar">
-        <img src="assets/img/discos-fibra-abrasiva.png" alt="Discos de fibra abrasiva ALBAIT">
+        <img class="foto-grande" src="assets/img/gama-fibra-abrasiva.jpg" alt="Discos de fibra abrasiva ALBAIT">
         <h3>Discos de fibra abrasiva</h3>
       </div>
       <div class="producto-card revelar">
-        <img src="assets/img/discos-fieltro.png" alt="Discos de fieltro ALBAIT">
+        <img class="foto-grande" src="assets/img/gama-discos-fieltro.jpg" alt="Discos de fieltro ALBAIT">
         <h3>Discos de fieltro</h3>
       </div>
       <div class="producto-card revelar">
-        <img src="assets/img/material-proteccion.png" alt="Material de protección ALBAIT">
+        <img class="foto-grande" src="assets/img/gama-material-proteccion.jpg" alt="Material de protección ALBAIT">
         <h3>Material de protección</h3>
       </div>
       <div class="producto-card revelar">
-        <img src="assets/img/pastas-pulir.png" alt="Pastas para pulir ALBAIT">
+        <img class="foto-grande" src="assets/img/gama-pastas-pulir.jpg" alt="Pastas para pulir ALBAIT">
         <h3>Pastas para pulir</h3>
       </div>
       <div class="producto-card revelar">
-        <img src="assets/img/bandas-lija.png" alt="Bandas de lija ALBAIT">
+        <img class="foto-grande" src="assets/img/gama-bandas-lija.jpg" alt="Bandas de lija ALBAIT">
         <h3>Bandas de lija</h3>
       </div>
       <div class="producto-card revelar">
-        <div class="icono-circulo">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="3"/><path d="M12 3v6M12 15v6M3 12h6M15 12h6"/></svg>
-        </div>
+        <img class="foto-grande" src="assets/img/gama-higiene.jpg" alt="Productos de higiene ALBAIT">
         <h3>Productos de higiene</h3>
       </div>
       <div class="producto-card revelar">
-        <img src="assets/img/poleas-contacto.png" alt="Poleas de contacto ALBAIT">
+        <img class="foto-grande" src="assets/img/gama-poleas.jpg" alt="Poleas de contacto ALBAIT">
         <h3>Poleas de contacto</h3>
       </div>
       <div class="producto-card revelar">
-        <img src="assets/img/cepillos-mil-hojas.png" alt="Cepillos de mil hojas ALBAIT">
+        <img class="foto-grande" src="assets/img/gama-mil-hojas.jpg" alt="Cepillos de mil hojas ALBAIT">
         <h3>Cepillos de mil hojas</h3>
       </div>
     </div>
