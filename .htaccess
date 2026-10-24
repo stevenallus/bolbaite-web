@@ -1,0 +1,93 @@
+# ── Migración industrialbolbaite.es: conservar posicionamiento SEO ──
+Options -MultiViews
+
+<IfModule mod_rewrite.c>
+  RewriteEngine On
+
+  # ── Canonización: una sola versión del sitio (https + www) ──
+  # Evita que convivan 4 versiones (http/https × con/sin www) que fragmentan
+  # el posicionamiento. Si el hosting ya lo fuerza desde su panel y
+  # apareciese algún bucle de redirección, comentar este bloque completo.
+  RewriteCond %{HTTPS} off [OR]
+  RewriteCond %{HTTP_HOST} !^www\. [NC]
+  RewriteRule ^ https://www.industrialbolbaite.es%{REQUEST_URI} [R=301,L,NE]
+
+  # ── Redirecciones 301 de URLs del sitio antiguo (conservar SEO) ──
+
+  # Fichas de producto del catálogo antiguo (/catalogo/10920-...) → catálogo único
+  RewriteRule ^catalogo/.+$ /catalogo [R=301,L]
+
+  # /politica-de-privacidad  →  /politica-privacidad
+  RewriteRule ^politica-de-privacidad/?$ /politica-privacidad [R=301,L]
+
+  # /politica-de-cookies  →  /politica-cookies
+  RewriteRule ^politica-de-cookies/?$ /politica-cookies [R=301,L]
+
+  # /contacto y /contacto/sede  →  home, sección de contacto
+  RewriteRule ^contacto/?$ /#contacto [NE,R=301,L]
+  RewriteRule ^contacto/sede/?$ /#contacto [NE,R=301,L]
+
+  # /descargas  →  catálogo (los PDF comerciales ahora cuelgan del catálogo)
+  RewriteRule ^descargas/?$ /catalogo [R=301,L]
+
+  # /buscar  →  portada (el buscador del sitio antiguo ya no existe)
+  RewriteRule ^buscar/?$ / [R=301,L]
+
+  # Normalizar: la portada es /, no /index
+  RewriteRule ^index(\.html)?$ / [R=301,L]
+
+  # ── Servir los .html sin extensión para que las URLs limpias funcionen ──
+  # (/catalogo, /grupo-bolbaite, /aviso-legal, ...)
+  RewriteCond %{REQUEST_FILENAME}.html -f
+  RewriteCond %{REQUEST_URI} !\.html$
+  RewriteRule ^(.*)$ $1.html [L]
+</IfModule>
+
+# Página de error personalizada (evita 404 "desnudos" durante la migración)
+ErrorDocument 404 /index.html
+
+# ── Seguridad ────────────────────────────────────────────────
+# Sin listados de directorios ni acceso a ficheros ocultos
+Options -Indexes -MultiViews
+<FilesMatch "^\.">
+  Require all denied
+</FilesMatch>
+
+<IfModule mod_headers.c>
+  # No enmarcar la web en iframes ajenos (clickjacking): XFO para navegadores
+  # antiguos + frame-ancestors dentro de la CSP de abajo
+  Header always set X-Frame-Options "SAMEORIGIN"
+
+  # Evitar adivinado de tipos MIME
+  Header always set X-Content-Type-Options "nosniff"
+
+  # Enlaces externos no reciben la URL completa como referente
+  Header always set Referrer-Policy "strict-origin-when-cross-origin"
+
+  # Forzar HTTPS en el navegador durante 6 meses (dominio ya sirve por HTTPS)
+  Header always set Strict-Transport-Security "max-age=15552000"
+
+  # Permisos de APIs del navegador: nada de geolocalización, cámara, micrófono…
+  Header always set Permissions-Policy "geolocation=(), camera=(), microphone=(), payment=(), usb=()"
+
+  # Content-Security-Policy: qué puede cargar/ejecutar cada página.
+  #  · style/script 'unsafe-inline': el sitio usa CSS y JS embebidos en el HTML
+  #  · connect-src y form-action: envío del formulario a FormSubmit (AJAX)
+  #  · frame-src: iframe del mapa de Google (solo se carga al pulsar "Cargar mapa")
+  #  · img-src: solo imágenes del propio sitio (no hay data: URI en el código)
+  Header always set Content-Security-Policy "default-src 'self'; style-src 'self' 'unsafe-inline'; script-src 'self' 'unsafe-inline'; img-src 'self'; font-src 'self'; connect-src 'self' https://formsubmit.co; form-action 'self' https://formsubmit.co; frame-src https://www.google.com https://maps.google.com; frame-ancestors 'self'; base-uri 'self'; object-src 'none'"
+</IfModule>
+
+# Compresión y caché (rendimiento = mejor ranking)
+<IfModule mod_deflate.c>
+  AddOutputFilterByType DEFLATE text/html text/css application/javascript image/svg+xml
+</IfModule>
+<IfModule mod_expires.c>
+  ExpiresActive On
+  ExpiresByType image/webp "access plus 1 year"
+  ExpiresByType image/jpeg "access plus 1 year"
+  ExpiresByType image/png "access plus 1 year"
+  ExpiresByType text/css "access plus 1 month"
+  ExpiresByType application/javascript "access plus 1 month"
+  ExpiresByType text/html "access plus 1 hour"
+</IfModule>

@@ -55,6 +55,12 @@ while (my $cli = $srv->accept) {
         my ($volumen, $dirs, $archivo) = File::Spec->splitpath($ruta);
         my ($ext) = $archivo =~ /\.([a-zA-Z0-9]+)$/;
 
+        # URLs limpias: /catalogo -> /catalogo.html (igual que el .htaccess en producción)
+        if ($ruta !~ /\.[a-zA-Z0-9]+$/ && !-f File::Spec->catfile($raiz, $ruta)) {
+            my $con_html = "$ruta.html";
+            $ruta = $con_html if -f File::Spec->catfile($raiz, $con_html);
+        }
+
         if (open my $fh, '<:raw', File::Spec->catfile($raiz, $ruta)) {
             local $/;
             my $datos = <$fh>;
